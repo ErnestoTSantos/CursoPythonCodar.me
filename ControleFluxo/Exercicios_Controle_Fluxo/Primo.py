@@ -2,7 +2,6 @@ number = int(input('Digite um número: '))
 
 i = 1
 j = 0
-k = 0
 
 
 while i <= number:
