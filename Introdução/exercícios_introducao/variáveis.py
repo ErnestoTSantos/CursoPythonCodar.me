@@ -1,4 +1,10 @@
-print(type('Ernesto'))
-print(type(18))
-print(type(49.99))
-print(type(True))
+name = 'Ernesto'
+age = 18
+value = 49.99
+permission_drive = True
+
+
+print(type(name))
+print(type(age))
+print(type(value))
+print(type(permission_drive))
