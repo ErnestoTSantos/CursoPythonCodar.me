@@ -1,3 +1,13 @@
+"""
+
+b. Módulo administrador.py
+    I. Deve conter uma classe Administrador que estende (herda de) Usuario .
+    II. Deve sobrescrever o método imprime_usuario e imprimir: "Gabriel
+    (gabriel@exemplo.com) – Administrador", para uma instância com nome =
+    "Gabriel" e email = "gabriel@exemplo.com”
+
+"""
+
 from users import User
 
 

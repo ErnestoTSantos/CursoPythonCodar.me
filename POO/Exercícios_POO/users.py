@@ -1,12 +1,12 @@
 """
 
 a. Módulo usuario.py
-    i. Deve conter uma classe Usuario
-    ii. Classe Usuario deve ter um construtor que recebe nome e email
-    iii. Classe Usuario deve possuir um método de instância imprime_usuario que
+    I. Deve conter uma classe Usuario
+    II. Classe Usuario deve ter um construtor que recebe nome e email
+    III. Classe Usuario deve possuir um método de instância imprime_usuario que
     imprime: "Gabriel (gabriel@exemplo.com)", para uma instância com nome =
     "Gabriel" e email = "gabriel@exemplo.com"
-    iv. Classe Usuario deve possuir um atributo de classe quantidade que
+    IV. Classe Usuario deve possuir um atributo de classe quantidade que
     armazena a quantidade de instâncias criadas, sejam instâncias de Usuario
     ou de qualquer classe que estenda Usuario . Por exemplo:
     Administrador(Usuario).
