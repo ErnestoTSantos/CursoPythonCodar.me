@@ -1,8 +1,4 @@
 number = int(input('Digite um número: '))
 
-if number % 2 == 0:
-    number = True
-else:
-    print(number)
-    number = False
-print('O número é: ', number)
+verification = number % 2 == 0
+print('O número é: ', verification)
