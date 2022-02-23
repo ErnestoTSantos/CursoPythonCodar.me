@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 
 class RoutesEvents:
-    # Como se fosse um método stático
+    # Como se fosse um método estático
     @app.route("/")
     def index():
         return "<h1>Flask configurado com sucesso!</h1>"
