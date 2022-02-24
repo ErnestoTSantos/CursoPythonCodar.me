@@ -21,3 +21,6 @@ DesenvolvendoUmaAPI/*
 
 FerramentasDev/*
 !FerramentasDev/Exercícios_ferramentas
+
+Flask/*
+!Flask/Exercícios_Flask
