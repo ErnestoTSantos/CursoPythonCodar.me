@@ -1,7 +1,7 @@
 from flask import Flask, abort, jsonify, request, url_for
 
-from modules.events import Events
-from modules.onLineEvents import OnLineEvent, events
+from models.events import Events
+from models.onLineEvents import OnLineEvent, events
 
 app = Flask(__name__)
 
