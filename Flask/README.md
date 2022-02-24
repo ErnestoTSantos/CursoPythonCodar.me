@@ -1,5 +1,5 @@
 # Módulo 11 do curso
-### Criando uma API com Flask <img align="center" alt="Ernesto-Flask" height="30" width="40" src="https://github.com/devicons/devicon/blob/master/icons/flask/flask-original.svg">:
+### Criando uma API com Flask: <img align="center" alt="Ernesto-Flask" height="30" width="40" src="https://github.com/devicons/devicon/blob/master/icons/flask/flask-original.svg">
 
 * Será necessário criar um ambiente virtual para rodar a aplicação.
 * Para cria-lo utilize o comando python -m venv venv. Assim uma pasta com o ambiente virtual será inicada.
