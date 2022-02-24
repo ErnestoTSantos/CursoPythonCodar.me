@@ -1,4 +1,4 @@
-# Módulo 11 do curso
+# Módulo 11 do curso <img align="center" alt="Ernesto-Python" height="30" width="40" src="https://github.com/devicons/devicon/blob/master/icons/flask/flask-original.svg">
 ### Criando uma API com Flask:
 
 * Será necessário criar um ambiente virtual para rodar a aplicação.
