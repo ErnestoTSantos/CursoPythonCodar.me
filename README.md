@@ -1,4 +1,4 @@
-# <img align="center" alt="Ernesto-VSCode" height="30" width="40" src="https://github.com/devicons/devicon/blob/master/icons/vscode/vscode-original-wordmark.svg"> Repositório para armazenar os códigos dos exercícios do curso de python da Codar.me. <img align="center" alt="Ernesto-Python" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg">
+# <img align="center" alt="Ernesto-VSCode" height="30" width="40" src="https://github.com/devicons/devicon/blob/master/icons/vscode/vscode-original-wordmark.svg"> Repositório para armazenar os códigos dos exercícios do curso de python da Codar.me. <img align="center" alt="Ernesto-Python" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"> <img align="center" alt="Ernesto-Django" height="30" width="40" src="https://github.com/devicons/devicon/blob/master/icons/django/django-original.svg">
 
 ## Todos os exercícios foram produzidos durante o curso e desenvolvidos por mim.
 
