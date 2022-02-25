@@ -25,6 +25,7 @@ FerramentasDev/*
 Flask/*
 !Flask/Exercícios_Flask
 !Flask/Exercício_ClassBasedViews
+!Flask/ToDO_ClassBased
 
 Django/*
 !Django/Exercícios_Django
