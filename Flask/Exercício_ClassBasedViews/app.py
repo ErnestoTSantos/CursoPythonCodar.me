@@ -1,4 +1,4 @@
-from flask import Flask, abort, json, jsonify, request
+from flask import Flask, abort, jsonify, request
 from flask.views import MethodView
 
 from models.events import Events
@@ -34,7 +34,7 @@ class RouteEvent(MethodView):
         return jsonify(event.__dict__)
 
     def post(self):
-        data = json.loads(request.data)
+        data = request.get_json()
         name = data.get('name')
         localization = data.get('localization')
 
