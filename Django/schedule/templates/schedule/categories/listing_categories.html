@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <h2>Lista de categorias:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{% if category.description %}{{ category.description }}{% else %}Essa categoria não tem uma descrição!{% endif %}</td>
+                    <td><a href={% url 'schedule:category_datails' category.id %}>Ver detalhes</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<html>

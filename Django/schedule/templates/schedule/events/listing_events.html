@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <h2>Lista de eventos:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Local/Link</th>
+                <th>Data</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.category }}</td>
+                    <td>{% firstof event.place event.link toDefine %}</td>
+                    <td>
+                        {% if event.date %}
+                            {{ event.date | date:"d/m/Y" }}
+                        {% else %}
+                            A definir.
+                        {% endif %}
+                    </td>
+                    <td><a href={% url 'schedule:details' event.id %}>Ver detalhes</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<html>

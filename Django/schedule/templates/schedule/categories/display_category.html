@@ -1,0 +1,6 @@
+<html>
+    <h1>Categoria: {{ category.name }}</h1>
+    <p>Descrição: {% if category.description %}{{ category.description }}{% else %}Essa categoria não tem uma descrição!{% endif %}</p>
+    <p>Quantidade de eventos com essa classe: {{ amount }}</p>
+    <p><a href={% url 'schedule:categories' %}>Ir para listagem de categorias</a></p>
+</html>

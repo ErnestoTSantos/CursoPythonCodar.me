@@ -27,5 +27,10 @@ Flask/*
 !Flask/Exercício_ClassBasedViews
 !Flask/ToDO_ClassBased
 
-Django/*
-!Django/Exercícios_Django
+Django/venv
+Django/db.sqlite3
+Django/resume.txt
+Django/sqldiff.exe
+Django/sqlite3_analyzer.exe
+Django/sqlite3.exe
+Django/.mypy_cache

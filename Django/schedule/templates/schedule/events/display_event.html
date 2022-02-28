@@ -1,0 +1,15 @@
+<html>
+    <h1>Evento: {{ event.name }}</h1>
+    <p>Categoria: {{ event.category.name }}</p>
+    {% if event.place %}<p>Local: {{ event.place }}</p>{% endif %}
+    {% if event.link %}<p>Link: {{ event.link }}</p>{% endif %}
+    <p>Data: {% if event.date %}{{ event.date | date:"d/m/Y" }}{% else %}A definir.{% endif %}</p>
+    <p>Quantidade de participantes: {{ event.participants }}</p>
+    <br/>
+    <form action="{% url 'schedule:participate_event' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="event_id" value={{ event.id }}>
+        <input type="submit" value="Participar">
+    </form>
+    <p><a href={% url 'schedule:index' %}>Ir para listagem de eventos</a></p>
+</html>
