@@ -1,7 +1,7 @@
 from flask import Flask, abort, jsonify, request
 from flask.views import MethodView
 
-from models.ToDo import ToDo
+from models.to_do import ToDo
 from models.users import chores, users
 
 app = Flask(__name__)
@@ -55,6 +55,10 @@ def delete_chore(name, id):
             if chore.id == id:
                 chores.remove(chore)
                 return jsonify(id=chore.id)
+            else:
+                abort(404, f'Não foi possível encontrar a tarefa de id: {id}')
+        else:
+            abort(404, f'Não foi possível encontrar o usuário: {name}')
 
 
 class ToDoRoutes(MethodView):
