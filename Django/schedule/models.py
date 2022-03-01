@@ -61,3 +61,5 @@ class Event(models.Model):
             event = Event(name=name, category=category,)
 
         event.save()
+
+        return event
