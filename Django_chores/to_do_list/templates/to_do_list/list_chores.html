@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            h2 {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <h1>Lista de tarefas do(a) {{ author.first_name }} {{ author.last_name }}:</h1>
+    {% if chores %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Ativa</th>
+                    <th>Data de criação</th>
+                    <th>Data de atualização</th>
+                    <th>Data de finalização</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chore in chores %}
+                <tr>
+                    <td>{{ chore.name }}</td>
+                    <td>{{ chore.active }}</td>
+                    <td>{{ chore.create_date }}</td>
+                    <td>{{ chore.update_date }}</td>
+                    <td>{% if chore.final_date %}{{ chore.final_date }}{% else %}A definir{% endif %}</td>
+                    <td><a href={% url 'chores:chore_detailing' chore.author chore.id %}>Ver detalhes</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h2>Infelizmente o(a) autor(a) {{ author.first_name }} não tem nehuma tarefa!</h2>
+    {% endif %}
+    
+</html>
+    

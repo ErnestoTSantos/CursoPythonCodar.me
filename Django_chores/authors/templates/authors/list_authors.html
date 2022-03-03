@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <h1>Lista de autores:</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Idade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for author in authors %}
+                <tr>
+                    <td>{{ author.first_name }}</td>
+                    <td>{% if author.last_name %}{{ author.last_name }}{% else %}------------{% endif %}</td>
+                    <td>{{ author.age }}</td>
+                    <td><a href={% url 'authors:author_details' author.first_name %}>Ver detalhes</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>----------------------------------------------------------------</p>
+    <h3>Deseja criar um autor?</h3>
+    <form action={% url 'authors:creating_author' %} method="POST" autocomplete="off">
+        {% csrf_token %}
+        <p>Primeiro nome do autor: <input type="text" name="first_name" placeholder="Digite o nome do autor..." required="True"></p>
+        <p>Sobrenome: <input type="text" name="last_name" placeholder="Digite o sobrenome do autor..."></p>
+        <p>Idade: <input type="number" name="age" placeholder="Escreva sua idade..." required="True"></p>
+        <input type="submit" value="Criar autor">
+    </form>
+</html>

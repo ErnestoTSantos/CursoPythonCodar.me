@@ -1,0 +1,16 @@
+<html>
+    <h1>Autor: {{ author.first_name }}</h1>
+    <p>Nome completo: {{ author.first_name }} {% if author.last_name %}{{ author.last_name }}{% endif %}</p>
+    <p>Idade: {{ author.age }}</p>
+    <p>Quantidade de tarefas produzidas por este autor: {{ amount }}</p>
+    <p>----------------------------------------------------------------</p>
+    <form action={% url 'authors:creating_chore' %} method="POST" autocomplete="off">
+        {% csrf_token %}
+        <input type="hidden" name="author_name" value={{ author }}>
+        <p>Nome da tarefa: <input type="text" name="chore_name" placeholder="Digite o nome da sua tarefa..." required="True"></p>
+        <p>Tarefa ativa: Sim<input type="radio" name="active_chore" value="True" required="True"> Não<input type="radio" name="active" value="False"></p>
+        <p>Data de finalização: <input type="date" name="finish_date"></p>
+        <input type="submit" value="Criar">
+    </form>
+    <p><a href={% url 'authors:authors_list' %}>Ir para listagem de autores</a></p>
+</html>

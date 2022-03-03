@@ -30,7 +30,10 @@ Flask/*
 Django/venv
 Django/db.sqlite3
 Django/resume.txt
-Django/sqldiff.exe
-Django/sqlite3_analyzer.exe
-Django/sqlite3.exe
+Django/*.exe
 Django/.mypy_cache
+
+Django_chores/*.exe
+Django_chores/db.sqlite3
+Django_chores/.mypy_cache
+Django_chores/venv

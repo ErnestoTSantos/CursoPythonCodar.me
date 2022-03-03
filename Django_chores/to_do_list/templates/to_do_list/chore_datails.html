@@ -1,0 +1,9 @@
+<html>
+    <h1>Nome da tarefa: {{ chore.name }}</h1>
+    <p>Autor: {{ chore.author }}</p>
+    <p>Ativa: {{ chore.active }}</p>
+    <p>Data de criação: {{ chore.create_date }}</p>
+    <p>Última atualização: {{ chore.update_date }}</p>
+    <p>Data de finalização: {% if chore.final_date %}{{ chore.final_date }}{% else %}Data a definir!{% endif %} </p>
+    <td><a href={% url 'chores:listing_chores' chore.author %}>Ver detalhes</a></td>
+</html>
