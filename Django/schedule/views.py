@@ -1,5 +1,6 @@
 from datetime import date
 
+# from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from schedule.models import Category, Event
@@ -9,6 +10,17 @@ def list_events(request):
     today_date = date.today()
     events = Event.objects.filter(date__gte=today_date).order_by('date')
 
+    # events_dict = {}
+
+    # for event in events:
+    #     events_dict[event.name] = {
+    #         'name': event.name,
+    #         'category': event.category.name,
+    #         'place': event.place,
+    #         'link': event.link,
+    #         'participants': event.participants
+    #     }
+
     return render(
         request,
         'schedule/events/listing_events.html',
@@ -17,6 +29,9 @@ def list_events(request):
             'toDefine': 'A definir'
         }
     )
+
+    # Retorna o elemento no formato JSON
+    # return JsonResponse(data=events_dict)
 
 
 def display_event(request, id):
