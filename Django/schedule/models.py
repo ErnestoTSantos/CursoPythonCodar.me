@@ -31,14 +31,14 @@ class Event(models.Model):
         'Category', on_delete=models.SET_NULL, null=True)
     place = models.CharField(max_length=255, blank=True)
     link = models.CharField(max_length=255, blank=True)
-    date = models.DateField(null=True)
+    date = models.DateField('Data do evento')
     participants = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.name}'
 
     @classmethod
-    def create_event(cls, name, category, place=None, link=None, date=None):
+    def create_event(cls, name, category, date, place=None, link=None,):
 
         if not name:
             raise ValueError('O evento precisa ter um nome!')
@@ -49,16 +49,13 @@ class Event(models.Model):
         if place and link:
             raise ValueError('O evento não pode ter um local e um link. Precisa ter apenas um dos dois!')  # noqa:E501
 
-        if place and date:
-            event = Event(name=name, category=category, place=place, date=date)
-        elif link and date:
-            event = Event(name=name, category=category, link=link, date=date)
-        elif place:
-            event = Event(name=name, category=category, place=place)
+        if place:
+            event = Event(name=name, category=category,
+                          place=place, date=date,)
         elif link:
-            event = Event(name=name, category=category, link=link)
+            event = Event(name=name, category=category, link=link, date=date,)
         else:
-            event = Event(name=name, category=category,)
+            event = Event(name=name, category=category, date=date,)
 
         event.save()
 

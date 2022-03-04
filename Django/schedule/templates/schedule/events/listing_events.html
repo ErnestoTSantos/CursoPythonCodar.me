@@ -29,13 +29,7 @@
                     <td>{{ event.name }}</td>
                     <td>{{ event.category }}</td>
                     <td>{% firstof event.place event.link toDefine %}</td>
-                    <td>
-                        {% if event.date %}
-                            {{ event.date | date:"d/m/Y" }}
-                        {% else %}
-                            A definir.
-                        {% endif %}
-                    </td>
+                    <td>{{ event.date }}</td>
                     <td><a href={% url 'schedule:details' event.id %}>Ver detalhes</a></td>
                 </tr>
             {% endfor %}
