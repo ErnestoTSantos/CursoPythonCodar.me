@@ -52,4 +52,12 @@ def create_author(request):
 
     Author.create_author(first_name=first_name, last_name=last_name, age=age)
 
+    # Forma de capturar os erros para retornar uma página de bad request
+
+    # try:
+    #     Author.create_author(first_name=first_name,
+    #                          last_name=last_name, age=age)
+    # except ValueError as error:
+    #     return render(request, '...', {'error': error})
+
     return redirect('authors:authors_list')
