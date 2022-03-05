@@ -9,6 +9,7 @@ from schedule.models import Category, Event
 def list_events(request):
     today_date = date.today()
     events = Event.objects.filter(date__gte=today_date).order_by('date')
+    categories = Category.objects.all()
 
     # events_dict = {}
 
@@ -26,7 +27,8 @@ def list_events(request):
         'schedule/events/listing_events.html',
         {
             'events': events,
-            'toDefine': 'A definir'
+            'toDefine': 'A definir',
+            'categories': categories,
         }
     )
 
@@ -82,3 +84,48 @@ def category_datails(request, id):
             'amount': events_amount,
         }
     )
+
+
+def create_category(request):
+    try:
+        category_name = request.POST.get('category_name')
+        category_description = request.POST.get('category_description')
+        if category_description:
+            Category.create_class(name=category_name,
+                                  description=category_description)
+        else:
+            Category.create_class(name=category_name)
+
+    except ValueError as error:
+        print(error)
+
+    return redirect('schedule:categories')
+
+
+def create_event(request):
+    try:
+        event_name = request.POST.get('event_name')
+        category_name = request.POST.get('category')
+        event_date = str(request.POST.get('date'))
+        place = request.POST.get('place')
+        link = request.POST.get('link')
+
+        if not place:
+            place = None
+
+        if not link:
+            link = None
+
+        if not category_name:
+            raise ValueError('Você precisa selecionar uma categoria!')
+
+        if not event_date:
+            event_date = None
+
+        category_object = get_object_or_404(Category, name=category_name)
+
+        Event.create_event(name=event_name, category=category_object, date=event_date, link=link, place=place)  # noqa:E501
+    except ValueError as error:
+        print(error)
+
+    return redirect('schedule:index')

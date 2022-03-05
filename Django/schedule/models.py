@@ -46,6 +46,9 @@ class Event(models.Model):
         if not category:
             raise ValueError('O evento precisa ter uma categoria!')
 
+        if not date:
+            raise ValueError('O evento precisa ter uma data!')
+
         if place and link:
             raise ValueError('O evento não pode ter um local e um link. Precisa ter apenas um dos dois!')  # noqa:E501
 

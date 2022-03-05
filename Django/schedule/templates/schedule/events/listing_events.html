@@ -35,4 +35,14 @@
             {% endfor %}
         </tbody>
     </table>
+    <p>-----------------------------------------------------------------------------------------------------------------------------------------</p>
+    <form action={% url 'schedule:create_event' %} method="POST" autocomplete="off">
+        {% csrf_token %}
+        <p>Nome: <input type="text" placeholder="Digite o nome do evento..." name="event_name"></p>
+        <p>Categoria: {% for category in categories %}<br>{{ category.name }}<input type="radio" name="category" value="{{ category.name }}" >{% endfor %}</p>
+        <p>Data: <input type="date" name="date"></p>
+        <p>Link: <input type="text" name="link" placeholder="Digite o link do evento aqui..."></p>
+        <p>place: <input type="text" name="place" placeholder="Digite o local do evento aqui..."></p>
+        <input type="submit" value="Criar novo evento">
+    </form>
 <html>

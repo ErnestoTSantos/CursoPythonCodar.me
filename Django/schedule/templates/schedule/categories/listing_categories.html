@@ -30,4 +30,12 @@
             {% endfor %}
         </tbody>
     </table>
+    <p>-----------------------------------------------------------------------------------------------------------------------------------------</p>
+    <h1>Deseja criar uma nova categoria?</h1>
+    <form action={% url 'schedule:create_category' %} method="POST">
+        {% csrf_token %}
+        <p>Nome: <input type="text" placeholder="Digite o nome da categoria..." name="category_name"></p>
+        <p>Descrição: <input type="text" name="category_description" placeholder="Digite uma descrição aqui..."></p>
+        <input type="submit" value="Criar nova categoria">
+    </form>
 <html>
