@@ -5,3 +5,5 @@
 * Os exercícios de Introdução, Operações e Controle de fluxo, foram produzidos na primeira semana de curso. Sendo a parte básica do curso.
 * OS exercícios de Estrutura de dados, Funções e POO(Programação Orientada a Objetos), foram produzidos na segunda semana de curso. Trazendo conceitos mais avançados.
 * Os exercícios Desenvolvendo Uma API, Ferramentas do Dev e Flask, foram produzidos na terceira semana de curso. Introduzindo aos conceitos de desenvolvimento web com o python, inicialmente utilizando uma biblioteca build-in da linguagem e introduzindo ao micro framework(Flask).
+* O exercício Django, foi desenvolvido na quarta semana do curso, trazendo uma introdução ao framework Django e algumas de suas funcionalidades.
+* Os exercícios sobre testes foram divididos entre a seção de testes e testes automatizados por TDD no módulo de Django. Todos os exercícios envolvendo testes foram desenvolvidos na quinta semana de curso, sendo esses os testes do módulo inicial de Django e a própria pasta Testes.
