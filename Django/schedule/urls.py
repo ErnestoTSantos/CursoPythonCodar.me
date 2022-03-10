@@ -7,6 +7,7 @@ from schedule.views import (category_datails, create_category, create_event,
 app_name = 'schedule'
 
 urlpatterns = [
+    path('', list_events, name='source'),
     path('events/', list_events, name='index'),
     path('events/<int:id>/', display_event, name='details'),
     path('participate/', participate_event, name='participate_event'),
