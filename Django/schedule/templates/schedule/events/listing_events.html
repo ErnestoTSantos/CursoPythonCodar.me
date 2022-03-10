@@ -10,31 +10,38 @@
                 text-align: left;
                 padding: 8px;
             }
+            h2 {
+                text-align: center;
+            }
         </style>
     </head>
     <h2>Lista de eventos:</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Categoria</th>
-                <th>Local/Link</th>
-                <th>Data</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in events %}
+    {% if events %}
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ event.name }}</td>
-                    <td>{{ event.category }}</td>
-                    <td>{% firstof event.place event.link toDefine %}</td>
-                    <td>{{ event.date }}</td>
-                    <td><a href={% url 'schedule:details' event.id %}>Ver detalhes</a></td>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Local/Link</th>
+                    <th>Data</th>
+                    <th>Ação</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.category }}</td>
+                        <td>{% firstof event.place event.link toDefine %}</td>
+                        <td>{% firstof event.date toDefine as  %}</td>
+                        <td><a href={% url 'schedule:details' event.id %}>Ver detalhes</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h2>Infelizmente não temos eventos cadastrados para os próximos dias!</h2>
+    {% endif %}
     <p>-----------------------------------------------------------------------------------------------------------------------------------------</p>
     <form action={% url 'schedule:create_event' %} method="POST" autocomplete="off">
         {% csrf_token %}
@@ -45,4 +52,5 @@
         <p>place: <input type="text" name="place" placeholder="Digite o local do evento aqui..."></p>
         <input type="submit" value="Criar novo evento">
     </form>
+    
 <html>

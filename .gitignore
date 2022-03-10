@@ -37,3 +37,11 @@ Django_chores/*.exe
 Django_chores/db.sqlite3
 Django_chores/.mypy_cache
 Django_chores/venv
+
+Django_hotel/*
+
+Testes/*
+!Testes/tasks
+!Testes/grade_calculator
+!Testes/calculator.py
+!Testes/test_calculator.py

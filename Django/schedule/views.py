@@ -1,14 +1,15 @@
 from datetime import date
 
 # from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (get_list_or_404, get_object_or_404, redirect,
+                              render)
 
 from schedule.models import Category, Event
 
 
 def list_events(request):
     today_date = date.today()
-    events = Event.objects.filter(date__gte=today_date).order_by('date')
+    events = Event.objects.exclude(date__lt=today_date).order_by('date')
     categories = Category.objects.all()
 
     # events_dict = {}
@@ -37,8 +38,7 @@ def list_events(request):
 
 
 def display_event(request, id):
-    today_date = date.today()
-    event = get_object_or_404(Event, id=id, date__gte=today_date)
+    event = get_object_or_404(Event, id=id)
 
     return render(
         request,
@@ -58,7 +58,8 @@ def participate_event(request):
 
 
 def list_category(request):
-    categories = Category.objects.all().order_by('?')
+    # categories = Category.objects.filter(active=True).order_by('name')
+    categories = get_list_or_404(Category.objects.filter(active=True).order_by('name'))  # noqa:E501
 
     return render(
         request,
@@ -70,7 +71,7 @@ def list_category(request):
 
 
 def category_datails(request, id):
-    category = get_object_or_404(Category, id=id)
+    category = get_object_or_404(Category, id=id, active=True)
 
     events = Event.objects.filter(category=category)
 
