@@ -29,24 +29,30 @@ class GradeCalculator:
         return round(average/students_amount, 2)
 
     def get_highest_note(self):
-        highest_note = 0
-        student_name = ''
-        for student, note in self._students:
-            if note > highest_note:
-                highest_note = note
-                student_name = student
+        list_students = self._students
 
-        return f'Nome: {student_name} e Nota: {highest_note}'
+        def highest_note(object):
+            student, note = object
+
+            return note
+
+        list_students.sort(key=highest_note)
+
+        students_amount = len(list_students)
+
+        return f'Nome: {list_students[students_amount - 1][0]} e Nota: {list_students[students_amount - 1][1]}'  # noqa:E501
 
     def get_lowest_note(self):
-        lowest_note = 10
-        student_name = ''
-        for student, note in self._students:
-            if note < lowest_note:
-                lowest_note = note
-                student_name = student
+        list_students = self._students
 
-        return f'Nome: {student_name} e Nota: {lowest_note}'
+        def lowest_note(object):
+            student, note = object
+
+            return note
+
+        list_students.sort(key=lowest_note)
+
+        return f'Nome: {list_students[0][0]} e Nota: {list_students[0][1]}'
 
     def get_approved(self):
         approved_students = []
