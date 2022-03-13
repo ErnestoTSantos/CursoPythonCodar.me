@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <h3>Deseja adicionar uma empresa?</h3>
+    <form action={% url 'accommodation:create_company' %} method="POST" autocomplete="off">
+        {% csrf_token %}
+        <input type="hidden" name="company" value="{{ company }}">
+        <p>Nome da empresa: <input type="text" name="name" placeholder="Digite o nome da empresa..."></p>
+        <p>Criada em: <input type="date" name="since"></p>
+        <p>Descrição: <input type="text" name="description" placeholder="Digite a descrição da empresa..."></p>
+        <p>Estado: {% for state in states %} <br>{{ state }}<input type="radio" name="state" value="{{ state }}">{% endfor %}</p>
+        <p>Endereção: <input type="text" name="address" placeholder="Digite a localização da empresa..."></p>
+        <input type="submit" value="Criar empresa">
+    </form>
+</html>

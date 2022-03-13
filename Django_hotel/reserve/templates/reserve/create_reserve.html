@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+            
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <h2>Você está fazendo uma reserva na empresa: {{ company.name }}</h2>
+    <h3>A sua reserva será no quarto/cabana/casa: {{ accommodation.accommodation_name }}</h3>
+    <form action="{% url 'reserve:create_reserve' %}" method="POST" autocomplete="off">
+        {% csrf_token %}
+        <input type="hidden" name="accommodation" value="{{ accommodation }}">
+        <p>Responsável pela reserva: <input type="text" name="person" placeholder="Digite o nome do responsável pela reserva..."></p>
+        <p>Check-in: <input type="date" name="check-in" placeholder="Selecione uma data de entrada..."></p>
+        <p>Check-out: <input type="date" name="check-out" placeholder="Selecione uma data de saida..."></p>
+        <p>Quantidade de pessoas: <input type="number" name="people" placeholder="Selecione o número de pessoas..."></p>
+        <input type="submit" value="Fazer reserva!">
+    </form>
+</html>

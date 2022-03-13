@@ -1,3 +1,5 @@
+*/.mypy_cache
+
 Introdução/*
 !Introdução/exercícios_introducao
 
@@ -38,10 +40,14 @@ Django_chores/db.sqlite3
 Django_chores/.mypy_cache
 Django_chores/venv
 
-Django_hotel/*
+Django_hotel/db.sqlite3
+Django_hotel/*.exe
+Django_hotel/venv
 
 Testes/*
 !Testes/tasks
 !Testes/grade_calculator
 !Testes/calculator.py
 !Testes/test_calculator.py
+
+django_rest_framework/*
