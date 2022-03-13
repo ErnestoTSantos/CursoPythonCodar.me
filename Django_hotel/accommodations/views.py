@@ -32,7 +32,8 @@ def accommodation_details(request, accommodation_name):
         'rented': accommodation.times_rented,
         'price': f'R${accommodation.price}',
         'number_of_people': accommodation.number_of_people,
-        'return_to_list': 'http://127.0.0.1:8000/api/accommodations_list/'
+        'return_to_list': 'http://127.0.0.1:8000/api/accommodations_list/',
+        'reserve': f'http://127.0.0.1:8000/reserve/{accommodation.company.name}/{accommodation.accommodation_name}/'
     }
 
     return JsonResponse(data=accommodation_data)
