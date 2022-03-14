@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from accommodations.models import Accommodation, Company
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (get_list_or_404, get_object_or_404, redirect,
+                              render)
 
 from reserve.models import Reserve
 
@@ -26,9 +29,6 @@ def create_reserve(request):
         check_out = request.POST.get('check-out')
         people = request.POST.get('people')
         person = request.POST.get('person')
-
-        accommodation.times_rented += 1
-        accommodation.save()
 
         Reserve.create_reservation(accommodation=accommodation, check_in=check_in, check_out=check_out, person=person, amount_people=people)  # noqa:E501
 

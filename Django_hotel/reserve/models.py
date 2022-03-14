@@ -2,7 +2,6 @@ from datetime import datetime
 
 from accommodations.models import Accommodation
 from django.db import models
-from django.forms import ValidationError
 from django.shortcuts import get_list_or_404, get_object_or_404
 
 
@@ -45,6 +44,10 @@ class Reserve(models.Model):
 
         if verification:
             reserve = Reserve(accommodation=accommodation, check_in=check_in, check_out=check_out, person=person, amount_people=amount_people)  # noqa:E501
+
+            accommodation.times_rented += 1
+
+            accommodation.save()
 
             reserve.save()
 
