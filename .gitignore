@@ -50,4 +50,10 @@ Testes/*
 !Testes/calculator.py
 !Testes/test_calculator.py
 
-django_rest_framework/*
+drf-api/venv
+drf-api/db.sqlite3
+drf-api/resume.txt
+drf-api/*.exe
+drf-api/.mypy_cache
+drf-api/marked/__pycache__
+drf-api/schedule/__pycache__
