@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <h3>Deseja adicionar um quarto a empresa {{ company.name }}?</h3>
+    <form action={% url 'accommodation:create_accommodation' %} method="POST" autocomplete="off">
+        {% csrf_token %}
+        <input type="hidden" name="company" value="{{ company }}">
+        <p>Nome do quarto/casa: <input type="text" name="accommodation" placeholder="Digite o nome do quarto..."></p>
+        <p>Descrição do quarto/casa: <input type="text" name="description" placeholder="Digite a descrição..."></p>
+        <p>Preço do quarto: <input type="float" name="price" placeholder="Digite o preço..."></p>
+        <p>Quantas pessoas acomoda: <input type="number" name="number_people" placeholder="Número de pessoas..."></p>
+        <input type="submit" value="Criar autor">
+    </form>
+</html>
