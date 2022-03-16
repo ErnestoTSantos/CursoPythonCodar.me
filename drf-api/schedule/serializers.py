@@ -33,6 +33,9 @@ class SchedulingSerializer(serializers.ModelSerializer):
         obj = None
         qs = None
 
+        if date_time and datetime.date(date_time).weekday() == 6:
+            raise serializers.ValidationError('Infelizmente o estabelecimento não trabalha no dia selecionado!')  # noqa:E501
+
         if date_time and client_phone and client_email and client_name:
             try:
                 obj = get_object_or_404(Scheduling, client_email=client_email, canceled=False)  # noqa:E501
@@ -64,7 +67,7 @@ class SchedulingSerializer(serializers.ModelSerializer):
                 if date_element == date_request:
                     if element.date_time + timedelta(minutes=30) <= date_time:  # noqa:E501
                         pass
-                    elif date_time + timedelta(minutes=30) <= element.date_time:
+                    elif date_time + timedelta(minutes=30) <= element.date_time:  # noqa:E501
                         pass
                     else:
                         raise serializers.ValidationError('Infelizmente o horário selecionado está inválido no momento!')  # noqa:E501

@@ -53,5 +53,5 @@ def scheduling_detail(request, id):
 
 
 @api_view(http_method_names=['GET'])
-def horary_list(request):
+def horary_list(request, date):
     ...
