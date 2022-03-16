@@ -30,7 +30,7 @@ def scheduling_list(request):
 # Atualmente recebe os métodos GET e PATCH.
 @api_view(http_method_names=['GET', 'PATCH', 'DELETE'])
 def scheduling_detail(request, id):
-    obj = get_object_or_404(Scheduling, id=id, canceled=False)
+    obj = get_object_or_404(Scheduling.objects.filter(id=id, canceled=False).order_by('date_time'))  # noqa:E501
     if request.method == 'GET':
         serializer = SchedulingSerializer(obj)
 
@@ -50,3 +50,8 @@ def scheduling_detail(request, id):
 
         # O código 204 demonstra que foi bem sucedida
         return Response(status=204)
+
+
+@api_view(http_method_names=['GET'])
+def horary_list(request):
+    ...
