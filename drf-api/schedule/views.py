@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.http import JsonResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
 from rest_framework.decorators import api_view
@@ -54,4 +56,49 @@ def scheduling_detail(request, id):
 
 @api_view(http_method_names=['GET'])
 def horary_list(request, date):
-    ...
+    if request.method == 'GET':
+        date = datetime.strptime(date, '%Y-%m-%d').date()
+
+        qs = Scheduling.objects.filter(
+            canceled=False, date_time__date=date).order_by('date_time__time')
+        serializer = SchedulingSerializer(qs, many=True)
+
+        appointment_list = []
+
+        dt_start = datetime(date.year, date.month, date.day, 9)  # noqa:E501
+        dt_end_saturday = datetime(date.year, date.month, date.day, 13)
+        dt_end = datetime(date.year, date.month, date.day, 18)  # noqa:E501
+        delta = timedelta(minutes=30)  # noqa:E501
+
+        if date.weekday() != 5 and date.weekday() != 6:
+            while dt_start != dt_end:
+
+                appointment_list.append({
+                    'date_time': dt_start
+                })
+
+                dt_start += delta
+
+        if date.weekday() == 5:
+            while dt_start != dt_end_saturday:
+                appointment_list.append({
+                    'date_time': dt_start
+                })
+
+                dt_start += delta
+
+        if date.weekday() == 6:
+            appointment_list.append({
+                'Information': 'Infelizmente o estabelecimento não trabalha aos domingos!'
+            })
+
+        for element in serializer.data:
+            element = element.get('date_time')
+            time_element = element[11:16]
+            for time in appointment_list:
+                date_time = time.get('date_time')
+                time_list = datetime.strftime(date_time, '%H:%M')
+                if time_element == time_list:
+                    appointment_list.remove(time)
+
+        return JsonResponse(appointment_list, safe=False)
