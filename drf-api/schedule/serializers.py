@@ -36,9 +36,9 @@ class SchedulingSerializer(serializers.ModelSerializer):
             closing_time = datetime(2022, 5, 15, 18, 00)
             closing_time = datetime.strftime(closing_time, '%H:%M')
 
-            if datetime.date(value).weekday() == 5 and time > return_interval:  # noqa:E501
+            if datetime.date(value).weekday() == 5 and time >= return_interval:  # noqa:E501
                 raise serializers.ValidationError('Infelizmente o estabelecimento só trabalha até as 13h no sábado!')  # noqa:E501
-            elif return_interval > time >= lunch_time:
+            elif return_interval > time >= lunch_time and datetime.date(value).weekday() != 5:  # noqa:E501
                 raise serializers.ValidationError('Os funcionários estão no horário de almoço!')  # noqa:E501
             elif open_time > time:
                 raise serializers.ValidationError('O estabelecimento abre apenas às 9h!')  # noqa:E501
