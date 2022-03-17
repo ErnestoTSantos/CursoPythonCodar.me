@@ -14,6 +14,10 @@ class SchedulingSerializer(serializers.ModelSerializer):
         model = Scheduling
         fields = ['id', 'date_time', 'client_name', 'client_email', 'client_phone']  # noqa:E501
 
+    def get_hour(self, value, hour, minutes):
+        date = datetime(value.year, value.month, value.day, hour, minutes)
+        return date.strftime('%H:%M')
+
     def validate_date_time(self, value):
         if value < timezone.now():
             raise serializers.ValidationError('O agendamento não pode ser realizado no passado!')  # noqa:E501
@@ -24,17 +28,13 @@ class SchedulingSerializer(serializers.ModelSerializer):
         if value:
             time = datetime.strftime(value, '%H:%M')
 
-            lunch_time = datetime(2022, 5, 15, 12, 00)
-            lunch_time = datetime.strftime(lunch_time, '%H:%M')
+            lunch_time = self.get_hour(value, 12, 0)
 
-            return_interval = datetime(2022, 5, 15, 13, 00)
-            return_interval = datetime.strftime(return_interval, '%H:%M')
+            return_interval = self.get_hour(value, 13, 0)
 
-            open_time = datetime(2022, 5, 15, 9, 0)
-            open_time = datetime.strftime(open_time, '%H:%M')
+            open_time = self.get_hour(value, 9, 0)
 
-            closing_time = datetime(2022, 5, 15, 18, 00)
-            closing_time = datetime.strftime(closing_time, '%H:%M')
+            closing_time = self.get_hour(value, 18, 0)
 
             if datetime.date(value).weekday() == 5 and time >= return_interval:  # noqa:E501
                 raise serializers.ValidationError('Infelizmente o estabelecimento só trabalha até as 13h no sábado!')  # noqa:E501
