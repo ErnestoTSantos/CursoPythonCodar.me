@@ -93,9 +93,7 @@ class SchedulingSerializer(serializers.ModelSerializer):
                 date_request = datetime.date(date_time)
 
                 if date_element == date_request:
-                    if element.date_time + timedelta(minutes=30) <= date_time:  # noqa:E501
-                        pass
-                    elif date_time + timedelta(minutes=30) <= element.date_time:  # noqa:E501
+                    if element.date_time + timedelta(minutes=30) <= date_time and date_time + timedelta(minutes=30) <= element.date_time:  # noqa:E501
                         pass
                     else:
                         raise serializers.ValidationError('Infelizmente o horário selecionado está inválido no momento!')  # noqa:E501
