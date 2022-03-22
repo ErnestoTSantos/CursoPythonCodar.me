@@ -1,3 +1,4 @@
+from categories.models import Category
 from rest_framework import serializers
 
 from .models import Pilot
@@ -6,7 +7,7 @@ from .models import Pilot
 class PilotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pilot
-        fields = ['id', 'name', 'age', 'number', 'automaker', 'championships_won']  # noqa:E501
+        fields = ['id', 'name', 'age', 'number', 'automaker', 'championships_won', 'category']  # noqa:E501
 
     def validate_name(self, value):
         amount_characters = len(value)
@@ -45,5 +46,13 @@ class PilotSerializer(serializers.ModelSerializer):
         if value < 0:
             raise serializers.ValidationError(
                 'A quantidade de títulos precisa ser igual ou superior a 0!')
+
+        return value
+
+    def validate_category(self, value):
+        obj = Category.objects.filter(name=value)
+
+        if not obj:
+            raise serializers.ValidationError('Infelizmente a categoria enviada não existe!')  # noqa:E501
 
         return value
