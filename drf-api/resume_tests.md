@@ -98,4 +98,29 @@
     - Precisamos utilizar um try/except, no except precisamos utilizar User.DoesNotExist.
     - Para que possamos passar como uma str, precisamos colocar o provide como um charfield do serializers.
     - Com isso conseguimos ter uma associação de agendamentos a um certo usuário a um username.
-    - No campo fields, podemos colocar '__all__', para que o serializer utilize todos os campos e caso queiramos excluir algum, utilizamos exclude=(nome dos atributos)
+    - No campo fields, podemos colocar '__all__', para que o serializer utilize todos os campos.
+
+9. Autenticação e Autorização:
+    - Precisamos ajustar quem pode fazer o que na API, ajustando seus acessos e permissões.
+    - Precisamos adicionar um atributo chamado permission_classes, precisamos colocar em uma lista. Precisamos também importar o pacote de permissões, uma das que mais utilizaremos é a IsAuthenticatedOrReadOnly(Para realizar algumas ações o usuário precisa estar logado ou apenas para ler algumas coisas o usuário pode ser anônimo) que vem do pacote permissions do rest_framework.
+    - Por padrão quando passamos a utilizar permissões, precisamos ter autenticações também. Por padrão todas as views que tem permissão esperam que passemos alguma autenticação.
+    - A forma mais simples de fazermos a autorização é indo em authorization do postman, selecionar Basic Auth que é necessário colocar o usuário e a senha do usuário.
+    - Existem inúmeras classes de permissões.
+
+10. Criando uma permissão customizada:
+    - Precisamos criar uma nova classe, para que possamos ajustar as permissões.
+    - A classe que criamos precisa herdar de permissions.BasePermission.
+    - Precisamos colocar nossa classe de permissões em permission_classes.
+    - Podemos ter permissões que atuam sobre uma API inteira e outras que atuam apenas sobre algum objeto.
+
+11. Relacionando serializers:
+    - Forma de listar ou representar coisas relacionadas a atributos de chaves estrangeiras.
+    - Precisamos criar um novo serializer.
+    - Como colocarmos um related_name, nós podemos acessar alguns atributos da outra tabela.
+    - Precisamos criar uma view, para realizar as listagens do usuário.
+    - A classe ListAPIView, só tem o método get atribuido a ela.
+    - Ao listarmos algum objeto de outro lugar, o ideal é mostrarmos todas as informações importantes.
+    - Podemos acessar os valores do objeto, colocando o serializer dele, com os atributos many=True, read_only=True. Só precisamos colocar como o nome do atributo = serializer.
+    - read_only=True, indica que os elementos serão apenas lidos e não serão sobrescritos.
+    - Ao alinharmos serializers, nos os alinhamos, pois estamos acessando valores por ele.
+    - É perigoso demais deixar uma view que tem serializers aninhados sem permissão alguma.
