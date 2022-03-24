@@ -2,13 +2,13 @@ from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from rest_framework import generics, mixins, permissions
+from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from schedule.serializers import ProviderSerializer, SchedulingSerializer
 
-from .models import Scheduling
+from .models import Faithfulness, Scheduling
 
 
 class IsOwnerOrCreateOnly(permissions.BasePermission):
@@ -34,9 +34,36 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
     serializer_class = SchedulingSerializer
     permission_classes = [IsOwnerOrCreateOnly]
 
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        provider_user = data['provider']
+        provider = User.objects.filter(username=provider_user).first()
+        client_name = data['client_name']
+
+        obj = Faithfulness.objects.filter(provider__username=provider_user, client=client_name)  # noqa:E501
+
+        if obj.exists():
+            obj = obj[0]
+            if obj.level < 11:
+                obj.level += 1
+                obj.save()
+        else:
+            Faithfulness.objects.create(provider=provider, client=client_name)
+
+        return super().post(request, *args, **kwargs)
+
     def get_queryset(self):
-        username = self.request.query_params.get('username', None)
-        queryset = Scheduling.objects.filter(provider__username=username, canceled=False)  # noqa:E501
+        confirmed = self.request.query_params.get('confirmed', None)
+        if confirmed == 'True' or confirmed == 'true':
+            username = self.request.query_params.get('username', None)
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=True)  # noqa:E501
+        elif confirmed == 'False' or confirmed == 'false':
+            username = self.request.query_params.get('username', None)
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=False)  # noqa:E501
+        else:
+            username = self.request.query_params.get('username', None)
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False)  # noqa:E501
+
         return queryset
 
 
@@ -47,8 +74,25 @@ class SchedulingDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SchedulingSerializer
     lookup_field = 'id'
 
+    def patch(self, request, id, *args, **kwargs):
+        username = request.user.username
+        confirmed = request.query_params.get('confirmed', None)
+
+        if confirmed == 'True' or confirmed == 'true':
+            obj = Scheduling.objects.filter(provider__username=username, id=id).first()  # noqa:E501
+            comparison_obj = Scheduling.objects.filter(provider__username=username, date_time=obj.date_time, canceled=False, confirmed=True).first()  # noqa:E501
+            if comparison_obj:
+                raise serializers.ValidationError('Infelizmente o horário em questão já foi confirmado para outro cliente!')  # noqa:E501
+            obj.confirmed = True
+            obj.states = 'CONF'
+            obj.save()
+
+        return super().patch(request, *args, **kwargs)
+
     def perform_destroy(self, instance):
+        instance.confirmed = False
         instance.canceled = True
+        instance.states = 'CANC'
         instance.save()
 
         return Response(status=204)
@@ -68,7 +112,7 @@ class HoraryList(APIView):
         if obj:
             date = datetime.strptime(date, '%Y-%m-%d').date()
 
-            qs = Scheduling.objects.filter(canceled=False, date_time__date=date, provider__username=username).order_by('date_time__time')  # noqa:E501
+            qs = Scheduling.objects.filter(canceled=False, date_time__date=date, provider__username=username, confirmed=True).order_by('date_time__time')  # noqa:E501
             serializer = SchedulingSerializer(qs, many=True)
 
             appointment_list = []
@@ -80,7 +124,6 @@ class HoraryList(APIView):
 
             if date.weekday() != 5 and date.weekday() != 6:
                 while dt_start != dt_end:
-
                     appointment_list.append({
                         'date_time': dt_start
                     })
@@ -97,7 +140,7 @@ class HoraryList(APIView):
 
             if date.weekday() == 6:
                 appointment_list.append({
-                    'Information': 'Infelizmente o estabelecimento não trabalha aos domingos!'
+                    'Information': 'Infelizmente o estabelecimento não trabalha aos domingos!'  # noqa:E501
                 })
 
             for element in serializer.data:

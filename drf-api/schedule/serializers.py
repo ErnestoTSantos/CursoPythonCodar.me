@@ -12,7 +12,7 @@ class SchedulingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Scheduling
-        fields = ['id', 'provider', 'date_time', 'client_name', 'client_email', 'client_phone']  # noqa:E501
+        fields = ['id', 'provider', 'date_time', 'client_name', 'client_email', 'client_phone', 'confirmed', 'states']  # noqa:E501
 
     provider = serializers.CharField()
 
@@ -57,7 +57,7 @@ class SchedulingSerializer(serializers.ModelSerializer):
             elif closing_time <= time:
                 raise serializers.ValidationError('O estabelecimento fehca às 18h!')  # noqa:E501
 
-        qs = Scheduling.objects.filter(canceled=False)  # noqa:E501
+        qs = Scheduling.objects.filter(canceled=False, confirmed=True)  # noqa:E501
 
         delta = timedelta(minutes=30)
 
@@ -94,14 +94,18 @@ class SchedulingSerializer(serializers.ModelSerializer):
 
         return value
 
+    def validate_state(self, value):
+        print(value)
+
     def validate(self, attrs):
+        provider = attrs.get('provider', '')
         date_time = attrs.get('date_time', '')
         client_email = attrs.get('client_email', '')
         client_phone = attrs.get('client_phone', '')
 
         if date_time and client_email:
-            if Scheduling.objects.filter(client_email=client_email, canceled=False, date_time__date=date_time).exists():  # noqa:E501
-                raise serializers.ValidationError('O(A) cliente não pode fazer duas reservas no mesmo dia')  # noqa:E501
+            if Scheduling.objects.filter(provider__username=provider, client_email=client_email, canceled=False, date_time__date=date_time).exists():  # noqa:E501
+                raise serializers.ValidationError('O(A) cliente não pode ter duas reservas no mesmo dia!')  # noqa:E501
 
         if client_email.endswith('.br') and client_phone.startswith('+') and not client_phone.startswith('+55'):  # noqa:E501
             raise serializers.ValidationError('E-mail brasileiro deve estar associado a um número do Brasil (+55)')  # noqa:E501
