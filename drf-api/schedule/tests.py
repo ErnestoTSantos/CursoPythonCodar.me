@@ -28,9 +28,11 @@ class TestListingScheduling(APITestCase):
             'date_time': '2022-04-28T17:30:00Z',
             'client_name': 'Ernesto Santos',
             'client_email': 'ernesto.terra2003@gmail.com',
-            'client_phone': '(51) 98936-5022'
+            'client_phone': '(51) 98936-5022',
+            'confirmed': False,
+            'states': 'NCNF'
         }
-        self.assertDictEqual(data[0], scheduling_serialized)
+        self.assertEqual(data[0], scheduling_serialized)
 
 
 class TestCreateScheduling(APITestCase):
@@ -79,6 +81,7 @@ class TestCreateScheduling(APITestCase):
     def test_return_400_when_invalid(self):
         user = User.objects.create(email='ernesto.terra2003@gmail.com', username='Ernesto', password='12345')  # noqa:E501
         scheduling_request_data = {
+            'provider': 'Ernesto',
             'date_time': '2022-04-28T17:30:00Z',
             'client_name': 'Ernesto Santos',
             'client_email': 'ernesto.terra2003',
