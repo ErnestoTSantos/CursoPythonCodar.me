@@ -1,104 +1,195 @@
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.shortcuts import get_list_or_404, get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from schedule.serializers import SchedulingSerializer
+from schedule.serializers import (EmployeeEstablishmentSerializer,
+                                  EmployeeSerializer, EstablishmentSerializer,
+                                  ProviderSerializer, SchedulingSerializer)
 
-from .models import Scheduling
+from .models import Employee, Establishment, Faithfulness, Scheduling
 
 
-@api_view(http_method_names=['GET', 'POST'])
-def scheduling_list(request):
-    if request.method == 'GET':
-        qs = get_list_or_404(Scheduling, canceled=False)
-        serializer = SchedulingSerializer(qs, many=True)
+class IsOwnerOrCreateOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return True
 
-        return JsonResponse(serializer.data, safe=False)
+        username = request.query_params.get('username', None)
+        if request.user.username == username:
+            return True
+        return False
 
-    if request.method == 'POST':
+
+class IsProvider(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if obj.provider == request.user:
+            return True
+        return False
+
+
+class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
+
+    serializer_class = SchedulingSerializer
+    permission_classes = [IsOwnerOrCreateOnly]
+
+    def post(self, request, *args, **kwargs):
         data = request.data
-        serializer = SchedulingSerializer(data=data)
+        provider_user = data['provider']
+        provider = User.objects.filter(username=provider_user).first()
+        client_name = data['client_name']
+        establishment = request.query_params.get('establishment', None)
 
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+        establishment_obj = Establishment.objects.filter(name=establishment)
+
+        obj = Faithfulness.objects.filter(provider__username=provider_user, client=client_name)  # noqa:E501
+
+        if establishment_obj.exists():
+            if Employee.objects.filter(provider__username=provider_user, establishment=establishment).exists():  # noqa:E501
+                if obj.exists():
+                    obj = obj[0]
+                    if obj.level < 11:
+                        obj.level += 1
+                        obj.save()
+                else:
+                    Faithfulness.objects.create(provider=provider, client=client_name)   # noqa:E501
+        else:
+            raise serializers.ValidationError(f'O estabelecimento {establishment} não foi encontrado!')   # noqa:E501
+
+        return super().post(request, *args, **kwargs)
+
+    def get_queryset(self):
+        confirmed = self.request.query_params.get('confirmed', None)
+        if confirmed == 'True' or confirmed == 'true':
+            username = self.request.query_params.get('username', None)
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=True)  # noqa:E501
+        elif confirmed == 'False' or confirmed == 'false':
+            username = self.request.query_params.get('username', None)
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=False)  # noqa:E501
+        else:
+            username = self.request.query_params.get('username', None)
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False)  # noqa:E501
+
+        return queryset
 
 
-# Aqui a view irá ser vista como uma api e sempre retornará elementos json.
-# Atualmente recebe os métodos GET e PATCH.
-@api_view(http_method_names=['GET', 'PATCH', 'DELETE'])
-def scheduling_detail(request, id):
-    obj = get_object_or_404(Scheduling.objects.filter(id=id, canceled=False).order_by('date_time'))  # noqa:E501
-    if request.method == 'GET':
-        serializer = SchedulingSerializer(obj)
+class SchedulingDetail(generics.RetrieveUpdateDestroyAPIView):
 
-        return JsonResponse(serializer.data)
+    permission_classes = [IsProvider]
+    queryset = Scheduling.objects.filter(canceled=False)
+    serializer_class = SchedulingSerializer
+    lookup_field = 'id'
 
-    if request.method == 'PATCH':
-        # Permissão de fazer modificações únicas, sem precisar do corpo todo.
-        serializer = SchedulingSerializer(obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=200)
-        return JsonResponse(serializer.errors, status=400)
+    def patch(self, request, id, *args, **kwargs):
+        username = request.user.username
+        confirmed = request.query_params.get('confirmed', None)
 
-    if request.method == 'DELETE':
-        obj.canceled = True
-        obj.save()
+        if confirmed == 'True' or confirmed == 'true':
+            obj = Scheduling.objects.filter(provider__username=username, id=id).first()  # noqa:E501
+            comparison_obj = Scheduling.objects.filter(provider__username=username, date_time=obj.date_time, canceled=False, confirmed=True).first()  # noqa:E501
+            if comparison_obj:
+                raise serializers.ValidationError('Infelizmente o horário em questão já foi confirmado para outro cliente!')  # noqa:E501
+            obj.confirmed = True
+            obj.states = 'CONF'
+            obj.save()
 
-        # O código 204 demonstra que foi bem sucedida
+        return super().patch(request, *args, **kwargs)
+
+    def perform_destroy(self, instance):
+        instance.confirmed = False
+        instance.canceled = True
+        instance.states = 'CANC'
+        instance.save()
+
+        faithfulness = Faithfulness.objects.filter(provider__username=instance.provider, client=instance.client_name).first()   # noqa:E501
+        if faithfulness.level > 0:
+            faithfulness.level -= 1
+            faithfulness.save()
+
         return Response(status=204)
 
 
-@api_view(http_method_names=['GET'])
-def horary_list(request, date):
-    if request.method == 'GET':
-        date = datetime.strptime(date, '%Y-%m-%d').date()
+class ProviderList(generics.ListAPIView):  # noqa:E501
 
-        qs = Scheduling.objects.filter(
-            canceled=False, date_time__date=date).order_by('date_time__time')
-        serializer = SchedulingSerializer(qs, many=True)
+    serializer_class = ProviderSerializer
+    queryset = User.objects.all()
 
-        appointment_list = []
+    permission_classes = [permissions.IsAdminUser]
 
-        dt_start = datetime(date.year, date.month, date.day, 9)  # noqa:E501
-        dt_end_saturday = datetime(date.year, date.month, date.day, 13)
-        dt_end = datetime(date.year, date.month, date.day, 18)  # noqa:E501
-        delta = timedelta(minutes=30)  # noqa:E501
 
-        if date.weekday() != 5 and date.weekday() != 6:
-            while dt_start != dt_end:
+class EmployeeEstablishment(generics.ListAPIView):
 
+    serializer_class = EmployeeEstablishmentSerializer
+    queryset = Employee.objects.all()
+
+    permission_classes = [permissions.IsAdminUser]
+
+
+class EmployeeList(generics.ListCreateAPIView):
+
+    serializer_class = EmployeeSerializer
+    queryset = Employee.objects.all()
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class EstablishmentList(generics.ListCreateAPIView):
+
+    serializer_class = EstablishmentSerializer
+    queryset = Establishment.objects.all()
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class HoraryList(APIView):
+    def get(self, request, date):
+        username = request.query_params.get('username', None)
+        obj = User.objects.filter(username=username)
+        if obj:
+            date = datetime.strptime(date, '%Y-%m-%d').date()
+
+            qs = Scheduling.objects.filter(canceled=False, date_time__date=date, provider__username=username, confirmed=True).order_by('date_time__time')  # noqa:E501
+            serializer = SchedulingSerializer(qs, many=True)
+
+            appointment_list = []
+
+            dt_start = datetime(date.year, date.month, date.day, 9)  # noqa:E501
+            dt_end_saturday = datetime(date.year, date.month, date.day, 13)
+            dt_end = datetime(date.year, date.month, date.day, 18)  # noqa:E501
+            delta = timedelta(minutes=30)  # noqa:E501
+
+            if date.weekday() != 5 and date.weekday() != 6:
+                while dt_start != dt_end:
+                    appointment_list.append({
+                        'date_time': dt_start
+                    })
+
+                    dt_start += delta
+
+            if date.weekday() == 5:
+                while dt_start != dt_end_saturday:
+                    appointment_list.append({
+                        'date_time': dt_start
+                    })
+
+                    dt_start += delta
+
+            if date.weekday() == 6:
                 appointment_list.append({
-                    'date_time': dt_start
+                    'Information': 'Infelizmente o estabelecimento não trabalha aos domingos!'  # noqa:E501
                 })
 
-                dt_start += delta
+            for element in serializer.data:
+                element = element.get('date_time')
+                time_element = element[11:16]
+                for time in appointment_list:
+                    date_time = time.get('date_time')
+                    time_list = datetime.strftime(date_time, '%H:%M')
+                    if time_element == time_list:
+                        appointment_list.remove(time)
 
-        if date.weekday() == 5:
-            while dt_start != dt_end_saturday:
-                appointment_list.append({
-                    'date_time': dt_start
-                })
-
-                dt_start += delta
-
-        if date.weekday() == 6:
-            appointment_list.append({
-                'Information': 'Infelizmente o estabelecimento não trabalha aos domingos!'
-            })
-
-        for element in serializer.data:
-            element = element.get('date_time')
-            time_element = element[11:16]
-            for time in appointment_list:
-                date_time = time.get('date_time')
-                time_list = datetime.strftime(date_time, '%H:%M')
-                if time_element == time_list:
-                    appointment_list.remove(time)
-
-        return JsonResponse(appointment_list, safe=False)
+            return JsonResponse(appointment_list, safe=False)
+        return Response(status=404)
