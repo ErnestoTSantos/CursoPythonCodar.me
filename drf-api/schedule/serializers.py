@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import serializers
 
-from schedule.models import Scheduling
+from schedule.models import Employee, Establishment, Scheduling
 
 
 class SchedulingSerializer(serializers.ModelSerializer):
@@ -94,9 +94,6 @@ class SchedulingSerializer(serializers.ModelSerializer):
 
         return value
 
-    def validate_state(self, value):
-        print(value)
-
     def validate(self, attrs):
         provider = attrs.get('provider', '')
         date_time = attrs.get('date_time', '')
@@ -113,9 +110,77 @@ class SchedulingSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class EstablishmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Establishment
+        fields = '__all__'
+
+    def validate_name(self, value):
+        amount_characters_name = len(value)
+
+        if amount_characters_name < 8:
+            raise serializers.ValidationError('Infelizmente o nome do estabelecimento precisa ter mais de 7 caracteres!')   # noqa:E501
+
+        if Establishment.objects.filter(name=value).exists():
+            raise serializers.ValidationError(
+                'O estabelecimento em questão já existe!')
+
+        return value
+
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = '__all__'
+
+    provider = serializers.CharField()
+    establishment = serializers.CharField()
+
+    def validate_provider(self, value):
+        try:
+            provider_obj = User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError('Username não existe!')
+
+        return provider_obj
+
+    def validate_establishment(self, value):
+        try:
+            establishment_obj = Establishment.objects.get(name=value)
+        except Establishment.DoesNotExist:
+            raise serializers.ValidationError('Estabelecimento não encontrado!')  # noqa:E501
+
+        return establishment_obj
+
+    def validate_assignment(self, value):
+        amount_characters = len(value)
+
+        if amount_characters < 5:
+            raise serializers.ValidationError(
+                'A profissão precisa ter mais de 4 caracteres!')
+
+        return value
+
+    def validate(self, attrs):
+        provider = attrs.get('provider', None)
+        establishment = attrs.get('establishment', None)
+        assignment = attrs.get('assignment', None)
+
+        if Employee.objects.filter(provider=provider, establishment=establishment, assignment=assignment).exists():   # noqa:E501
+            raise serializers.ValidationError('O prestador de serviço já está cadastrado com essas caracteristicas nesse estabelecimento!')   # noqa:E501
+
+        return attrs
+
+
 class ProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'scheduling']
 
     scheduling = SchedulingSerializer(many=True, read_only=True)
+
+
+class EmployeeEstablishmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ['id', 'provider', 'establishment']

@@ -24,8 +24,24 @@ class Scheduling(models.Model):
 
 class Faithfulness(models.Model):
     provider = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='faithfulness', verbose_name='Prestador do serviço')  # noqa:E501
-    client = models.CharField('Nome do cliente', max_length=200, unique=True)
+    client = models.CharField('Nome do cliente', max_length=200)
     level = models.IntegerField('Fidelidade', default=0)
 
     def __str__(self):
         return f'{self.client} = {self.level}'
+
+
+class Establishment(models.Model):
+    name = models.CharField('Nome do estabelecimento', max_length=100, unique=True)  # noqa:E501
+
+    def __str__(self):
+        return self.name
+
+
+class Employee(models.Model):
+    provider = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='employee', verbose_name='Prestador do serviço')  # noqa:E501
+    establishment = models.ForeignKey('Establishment', on_delete=models.CASCADE, related_name='establishment', verbose_name='Nome do estabelecimento')  # noqa:E501
+    assignment = models.CharField('Atribuição', max_length=50)
+
+    def __str__(self):
+        return f'{self.provider} -> {self.establishment}'

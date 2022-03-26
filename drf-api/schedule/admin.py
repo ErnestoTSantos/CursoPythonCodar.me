@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Faithfulness, Scheduling
+from .models import Employee, Establishment, Faithfulness, Scheduling
 
 
 @admin.register(Scheduling)
@@ -11,3 +11,13 @@ class SchedulingAdmin(admin.ModelAdmin):
 @admin.register(Faithfulness)
 class FaithfulnessAdmin(admin.ModelAdmin):
     list_display = ('provider', 'client', 'level')
+
+
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ('provider', 'establishment', 'assignment')
+
+
+@admin.register(Establishment)
+class EstablishmentAdmin(admin.ModelAdmin):
+    list_display = ('name', )

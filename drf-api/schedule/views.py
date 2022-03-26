@@ -6,9 +6,11 @@ from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from schedule.serializers import ProviderSerializer, SchedulingSerializer
+from schedule.serializers import (EmployeeEstablishmentSerializer,
+                                  EmployeeSerializer, EstablishmentSerializer,
+                                  ProviderSerializer, SchedulingSerializer)
 
-from .models import Faithfulness, Scheduling
+from .models import Employee, Establishment, Faithfulness, Scheduling
 
 
 class IsOwnerOrCreateOnly(permissions.BasePermission):
@@ -39,16 +41,23 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
         provider_user = data['provider']
         provider = User.objects.filter(username=provider_user).first()
         client_name = data['client_name']
+        establishment = request.query_params.get('establishment', None)
+
+        establishment_obj = Establishment.objects.filter(name=establishment)
 
         obj = Faithfulness.objects.filter(provider__username=provider_user, client=client_name)  # noqa:E501
 
-        if obj.exists():
-            obj = obj[0]
-            if obj.level < 11:
-                obj.level += 1
-                obj.save()
+        if establishment_obj.exists():
+            if Employee.objects.filter(provider__username=provider_user, establishment=establishment).exists():  # noqa:E501
+                if obj.exists():
+                    obj = obj[0]
+                    if obj.level < 11:
+                        obj.level += 1
+                        obj.save()
+                else:
+                    Faithfulness.objects.create(provider=provider, client=client_name)   # noqa:E501
         else:
-            Faithfulness.objects.create(provider=provider, client=client_name)
+            raise serializers.ValidationError(f'O estabelecimento {establishment} não foi encontrado!')   # noqa:E501
 
         return super().post(request, *args, **kwargs)
 
@@ -95,14 +104,44 @@ class SchedulingDetail(generics.RetrieveUpdateDestroyAPIView):
         instance.states = 'CANC'
         instance.save()
 
+        faithfulness = Faithfulness.objects.filter(provider__username=instance.provider, client=instance.client_name).first()   # noqa:E501
+        if faithfulness.level > 0:
+            faithfulness.level -= 1
+            faithfulness.save()
+
         return Response(status=204)
 
 
 class ProviderList(generics.ListAPIView):  # noqa:E501
+
     serializer_class = ProviderSerializer
     queryset = User.objects.all()
 
     permission_classes = [permissions.IsAdminUser]
+
+
+class EmployeeEstablishment(generics.ListAPIView):
+
+    serializer_class = EmployeeEstablishmentSerializer
+    queryset = Employee.objects.all()
+
+    permission_classes = [permissions.IsAdminUser]
+
+
+class EmployeeList(generics.ListCreateAPIView):
+
+    serializer_class = EmployeeSerializer
+    queryset = Employee.objects.all()
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class EstablishmentList(generics.ListCreateAPIView):
+
+    serializer_class = EstablishmentSerializer
+    queryset = Establishment.objects.all()
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class HoraryList(APIView):
