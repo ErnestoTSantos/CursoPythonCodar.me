@@ -40,7 +40,7 @@ class Establishment(models.Model):
 
 class Employee(models.Model):
     provider = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='employee', verbose_name='Prestador do serviço')  # noqa:E501
-    establishment = models.ForeignKey('Establishment', on_delete=models.CASCADE, related_name='establishment', verbose_name='Nome do estabelecimento')  # noqa:E501
+    establishment = models.ForeignKey('Establishment', on_delete=models.CASCADE, related_name='employee', verbose_name='Nome do estabelecimento')  # noqa:E501
     assignment = models.CharField('Atribuição', max_length=50)
 
     def __str__(self):

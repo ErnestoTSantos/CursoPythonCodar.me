@@ -116,16 +116,17 @@ class EstablishmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate_name(self, value):
+        obj = Establishment.objects.filter(name=value)
         amount_characters_name = len(value)
 
         if amount_characters_name < 8:
             raise serializers.ValidationError('Infelizmente o nome do estabelecimento precisa ter mais de 7 caracteres!')   # noqa:E501
 
-        if Establishment.objects.filter(name=value).exists():
+        if obj.exists():
             raise serializers.ValidationError(
                 'O estabelecimento em questão já existe!')
 
-        return value
+        return obj
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -182,5 +183,7 @@ class ProviderSerializer(serializers.ModelSerializer):
 
 class EmployeeEstablishmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Employee
-        fields = ['id', 'provider', 'establishment']
+        model = User
+        fields = ['id', 'username', 'employee']
+
+    employee = EmployeeSerializer(many=True, read_only=True)

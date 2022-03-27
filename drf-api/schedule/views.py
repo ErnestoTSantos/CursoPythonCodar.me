@@ -48,7 +48,7 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
         obj = Faithfulness.objects.filter(provider__username=provider_user, client=client_name)  # noqa:E501
 
         if establishment_obj.exists():
-            if Employee.objects.filter(provider__username=provider_user, establishment=establishment).exists():  # noqa:E501
+            if Employee.objects.filter(provider__username=provider_user, establishment=establishment_obj.first()).exists():  # noqa:E501
                 if obj.exists():
                     obj = obj[0]
                     if obj.level < 11:
@@ -57,7 +57,7 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
                 else:
                     Faithfulness.objects.create(provider=provider, client=client_name)   # noqa:E501
         else:
-            raise serializers.ValidationError(f'O estabelecimento {establishment} não foi encontrado!')   # noqa:E501
+            raise serializers.ValidationError('O estabelecimento não foi encontrado!')   # noqa:E501
 
         return super().post(request, *args, **kwargs)
 
@@ -123,7 +123,7 @@ class ProviderList(generics.ListAPIView):  # noqa:E501
 class EmployeeEstablishment(generics.ListAPIView):
 
     serializer_class = EmployeeEstablishmentSerializer
-    queryset = Employee.objects.all()
+    queryset = User.objects.all()
 
     permission_classes = [permissions.IsAdminUser]
 
