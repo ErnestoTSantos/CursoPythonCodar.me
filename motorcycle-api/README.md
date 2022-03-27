@@ -1,4 +1,4 @@
-# API para campeonato mundial de motovelocidade
+# API para campeonato mundial de moto velocidade.
 
 ### Decidi fazer esse projeto para praticar o método class based views do DRF, criando uma API de um esporte a motor que eu tenho extrema paixão.
 * Para utilizar o projeto, o melhor é ter um ambiente virtual, para realizar a instalação das dependências do projeto.
