@@ -9,6 +9,8 @@ class PilotSerializer(serializers.ModelSerializer):
         model = Pilot
         fields = ['id', 'name', 'age', 'number', 'automaker', 'championships_won', 'category']  # noqa:E501
 
+    category = serializers.CharField()
+
     def validate_name(self, value):
         amount_characters = len(value)
 
@@ -50,9 +52,9 @@ class PilotSerializer(serializers.ModelSerializer):
         return value
 
     def validate_category(self, value):
-        obj = Category.objects.filter(name=value)
+        obj = Category.objects.filter(name=value).first()
 
         if not obj:
             raise serializers.ValidationError('Infelizmente a categoria enviada não existe!')  # noqa:E501
 
-        return value
+        return obj

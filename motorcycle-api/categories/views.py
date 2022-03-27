@@ -1,50 +1,33 @@
-from django.http import JsonResponse
-from django.shortcuts import get_list_or_404, get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 
 from categories.models import Category
-from categories.serializers import CategorySerializer
+from categories.serializers import CategoryPilotsSerializer, CategorySerializer
 
 
-@api_view(http_method_names=['GET', 'POST'])
-def categories_list(request):
-    if request.method == 'GET':
-        qs = get_list_or_404(Category, active=True)
-        serializer = CategorySerializer(qs, many=True)
+class CategoriesList(generics.ListCreateAPIView):
 
-        return JsonResponse(serializer.data, safe=False)
-
-    if request.method == 'POST':
-        data = request.data
-        serializer = CategorySerializer(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Category.objects.filter(active=True)
 
 
-@api_view(http_method_names=['GET', 'PATCH', 'DELETE'])
-def category_details(request, name):
-    obj = get_object_or_404(Category.objects.filter(name=name))
-    if request.method == 'GET':
-        serializer = CategorySerializer(obj)
+class CategoryDetails(generics.RetrieveUpdateDestroyAPIView):
 
-        return JsonResponse(serializer.data)
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Category.objects.filter(active=True)
+    lookup_field = 'name'
 
-    if request.method == 'PATCH':
-        data = request.data
-        serializer = CategorySerializer(obj, data=data, partial=True)
-
-        if serializer.is_valid():
-            serializer.save()
-
-            return JsonResponse(serializer.data, status=200)
-        return JsonResponse(serializer.errors, status=400)
-
-    if request.method == 'DELETE':
-        obj.active = False
-        obj.save()
-
+    def perform_destroy(self, instance):
+        instance.active = False
+        instance.save()
         return Response(status=204)
+
+
+class CategoryPilotsList(generics.ListAPIView):
+
+    serializer_class = CategoryPilotsSerializer
+    queryset = Category.objects.filter(active=True)
+
+    permission_classes = [permissions.IsAdminUser]
