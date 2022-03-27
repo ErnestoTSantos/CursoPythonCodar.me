@@ -1,4 +1,4 @@
-# API para campeonato mundial de moto velocidade.
+# API para campeonato mundial de motovelocidade.
 
 ### Decidi fazer esse projeto para praticar o método class based views do DRF, criando uma API de um esporte a motor que eu tenho extrema paixão.
 * Para utilizar o projeto, o melhor é ter um ambiente virtual, para realizar a instalação das dependências do projeto.
@@ -7,4 +7,4 @@
 
 * Para rodar o projeto utilize o comando "python manage.py runserver".
 
-* A ideia do projeto é ter um controle dos pilotos atuais na moto velocidade mundial, dentro de suas três principais categorias.
+* A ideia do projeto é ter um controle dos pilotos atuais na motovelocidade mundial, dentro de suas três principais categorias.
