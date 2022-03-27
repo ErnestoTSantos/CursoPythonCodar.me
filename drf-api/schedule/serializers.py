@@ -1,22 +1,34 @@
 import re
 from datetime import datetime, timedelta
 
-from django.shortcuts import get_list_or_404
+from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import serializers
 
-from schedule.models import Scheduling
+from schedule.models import Employee, Establishment, Scheduling
 
 
 class SchedulingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Scheduling
-        fields = ['id', 'date_time', 'client_name', 'client_email', 'client_phone']  # noqa:E501
+        fields = ['id', 'provider', 'date_time', 'client_name', 'client_email', 'client_phone', 'confirmed', 'states']  # noqa:E501
+
+    provider = serializers.CharField()
 
     def get_hour(self, value, hour, minutes):
         date = datetime(value.year, value.month, value.day, hour, minutes)
         return date.strftime('%H:%M')
+
+    def validate_provider(self, value):
+        try:
+            provider_obj = User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError('Username não existe!')
+
+        # Podemos retornar apenas o objeto,
+        # pois o django por baixo dos panos sabe resolver qual será o objeto.
+        return provider_obj
 
     def validate_date_time(self, value):
         if value < timezone.now():
@@ -45,27 +57,28 @@ class SchedulingSerializer(serializers.ModelSerializer):
             elif closing_time <= time:
                 raise serializers.ValidationError('O estabelecimento fehca às 18h!')  # noqa:E501
 
-        qs = get_list_or_404(Scheduling, canceled=False)  # noqa:E501
+        qs = Scheduling.objects.filter(canceled=False, confirmed=True)  # noqa:E501
 
         delta = timedelta(minutes=30)
 
-        for element in qs:
-            date_element = datetime.date(element.date_time)
-            date_request = datetime.date(value)
+        if qs:
+            for element in qs:
+                date_element = datetime.date(element.date_time)
+                date_request = datetime.date(value)
 
-            if date_element == date_request:
-                if element.date_time + delta <= value or value + delta <= element.date_time:  # noqa:E501
-                    pass
-                else:
-                    raise serializers.ValidationError('Infelizmente o horário selecionado está indisponível!')  # noqa:E501
+                if date_element == date_request:
+                    if element.date_time + delta <= value or value + delta <= element.date_time:  # noqa:E501
+                        pass
+                    else:
+                        raise serializers.ValidationError('Infelizmente o horário selecionado está indisponível!')  # noqa:E501
 
         return value
 
     def validate_client_name(self, value):
         amount_characters_name = len(value)
 
-        if amount_characters_name < 3:
-            raise serializers.ValidationError('O nome do cliente precisa ter 3 ou mais caracteres!')  # noqa:E501
+        if amount_characters_name < 7:
+            raise serializers.ValidationError('O nome do cliente precisa ter 7 ou mais caracteres!')  # noqa:E501
 
         return value
 
@@ -82,14 +95,92 @@ class SchedulingSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        provider = attrs.get('provider', '')
         date_time = attrs.get('date_time', '')
         client_email = attrs.get('client_email', '')
         client_phone = attrs.get('client_phone', '')
 
-        if Scheduling.objects.filter(client_email=client_email, canceled=False, date_time__date=date_time).exists():  # noqa:E501
-            raise serializers.ValidationError('O(A) cliente não pode fazer duas reservas no mesmo dia')  # noqa:E501
+        if date_time and client_email:
+            if Scheduling.objects.filter(provider__username=provider, client_email=client_email, canceled=False, date_time__date=date_time).exists():  # noqa:E501
+                raise serializers.ValidationError('O(A) cliente não pode ter duas reservas no mesmo dia!')  # noqa:E501
 
         if client_email.endswith('.br') and client_phone.startswith('+') and not client_phone.startswith('+55'):  # noqa:E501
             raise serializers.ValidationError('E-mail brasileiro deve estar associado a um número do Brasil (+55)')  # noqa:E501
 
         return attrs
+
+
+class EstablishmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Establishment
+        fields = '__all__'
+
+    def validate_name(self, value):
+        amount_characters_name = len(value)
+
+        if amount_characters_name < 8:
+            raise serializers.ValidationError('Infelizmente o nome do estabelecimento precisa ter mais de 7 caracteres!')   # noqa:E501
+
+        if Establishment.objects.filter(name=value).exists():
+            raise serializers.ValidationError(
+                'O estabelecimento em questão já existe!')
+
+        return value
+
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = '__all__'
+
+    provider = serializers.CharField()
+    establishment = serializers.CharField()
+
+    def validate_provider(self, value):
+        try:
+            provider_obj = User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError('Username não existe!')
+
+        return provider_obj
+
+    def validate_establishment(self, value):
+        try:
+            establishment_obj = Establishment.objects.get(name=value)
+        except Establishment.DoesNotExist:
+            raise serializers.ValidationError('Estabelecimento não encontrado!')  # noqa:E501
+
+        return establishment_obj
+
+    def validate_assignment(self, value):
+        amount_characters = len(value)
+
+        if amount_characters < 5:
+            raise serializers.ValidationError(
+                'A profissão precisa ter mais de 4 caracteres!')
+
+        return value
+
+    def validate(self, attrs):
+        provider = attrs.get('provider', None)
+        establishment = attrs.get('establishment', None)
+        assignment = attrs.get('assignment', None)
+
+        if Employee.objects.filter(provider=provider, establishment=establishment, assignment=assignment).exists():   # noqa:E501
+            raise serializers.ValidationError('O prestador de serviço já está cadastrado com essas caracteristicas nesse estabelecimento!')   # noqa:E501
+
+        return attrs
+
+
+class ProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'scheduling']
+
+    scheduling = SchedulingSerializer(many=True, read_only=True)
+
+
+class EmployeeEstablishmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ['id', 'provider', 'establishment']
