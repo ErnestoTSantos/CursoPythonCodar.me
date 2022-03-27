@@ -1,3 +1,4 @@
+from pilots.serializers import PilotSerializer
 from rest_framework import serializers
 
 from categories.models import Category
@@ -19,3 +20,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def validate_last_champion(self, value):
         return value
+
+
+class CategoryPilotsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'pilots_amount',
+                  'motorization', 'last_champion', 'pilots']
+
+    pilots = PilotSerializer(many=True, read_only=True)
