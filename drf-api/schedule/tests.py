@@ -12,7 +12,6 @@ class TestListingScheduling(APITestCase):
         user = User.objects.create(email='ernesto.terra2003@gmail.com', username='Ernesto', password='12345')  # noqa:E501
         self.client.force_authenticate(user)
         response = self.client.get('/api/scheduling/?username=Ernesto')
-        print(response)
         data = json.loads(response.content)
         self.assertEqual(data, [])
 
