@@ -65,13 +65,13 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
         confirmed = self.request.query_params.get('confirmed', None)
         if confirmed == 'True' or confirmed == 'true':
             username = self.request.query_params.get('username', None)
-            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=True)  # noqa:E501
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=True).order_by('date_time__time')  # noqa:E501
         elif confirmed == 'False' or confirmed == 'false':
             username = self.request.query_params.get('username', None)
-            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=False)  # noqa:E501
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False, confirmed=False).order_by('date_time__time')  # noqa:E501
         else:
             username = self.request.query_params.get('username', None)
-            queryset = Scheduling.objects.filter(provider__username=username, canceled=False)  # noqa:E501
+            queryset = Scheduling.objects.filter(provider__username=username, canceled=False).order_by('date_time__time')  # noqa:E501
 
         return queryset
 
