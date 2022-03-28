@@ -46,8 +46,7 @@ class PilotSerializer(serializers.ModelSerializer):
 
     def validate_championships_won(self, value):
         if value < 0:
-            raise serializers.ValidationError(
-                'A quantidade de títulos precisa ser igual ou superior a 0!')
+            raise serializers.ValidationError('A quantidade de títulos precisa ser igual ou superior a 0!')  # noqa:E501
 
         return value
 
