@@ -1,0 +1,130 @@
+Resumo do módulo 12 - Desenvolvimento web com Django
+
+Criando nosso projeto Django:
+    Inicialmente devemos iniciar nosso ambiente virtual.
+    Após isso rodar o comando pip install Django com o ambiente virutal ativo.
+    E para rodar o Django e ver ele "funcionando" usamos o comando "python manage.py runserver".
+
+Criando nosso app:
+    No Django podemos dividir nossa aplicação em algumas partes, essas partes são chamadas de app's. Isto é, podemos fazer partes separadas do projeto, para que possamos "utiliza-las" em outros projetos por exemplo.
+    Para criarmos os app's utilizamos o comando python manage.py startapp "nome do app" ou django-admin startapp "nome do app".
+    Como no flask temos que arrumar as urls, no arquivo principal tem um arquivo urls.py. Lá é onde colocamos as nossas urls de projetos.
+    Em cada app temos um arquivo de views, para que possamos fazer o retorno das urls.
+    Diferente do flask, o django inicialmente sempre está em modo de desenvolvimento, fazendo com que seja mais fácil o carregamento do projeto novamente.
+    Não é uma boa prática colocar todas as urls no arquivo principal. O melhor é criarmos um novo arquivo no app e organizarmos as urls dele lá e colocarmos com o método include() as urls no arquivo principal.
+    Utilizamos o urls principal apenas quando quisermos acoplar um novo arquivo de url nele.
+
+Exibindo um evento:
+    Para apresentarmos coisas no Django precisamos cirar o modelo/entidade que iremos apresentar.
+    Podemos fazer como no flask inicialmente, para demonstrar o objeto que criamos.
+    Como no flask, o melhor é colocarmos a "/" no final da url, para evitar as ambiguidades.
+
+Utilizando Django Template:
+    Não é bom colocar o html no código python.
+    Quando criamos uma pasta template no app, é bom colocar o nome do app em uma pasta interna e ai sim colocar os arquivos html. Pois tendo uma pasta global e um arquivo com o mesmo nome, pode ser que algo de errado aconteça.
+    Podemos utilizar do shortcurts do django a função loader, para renderizarmos um elemento html.
+    Utilizamos {{  }} para colocar elementos que recebemos do python no html.
+    Requisição: url -> view -> model/template -> url
+    O render reduz o código, pois passamos tudo o que precismaos por ele. -> render(request, template_name, context).
+    Podemos colocar código python no html, utilizando ex: {% if ... %}{% endif %}.
+
+    Forma mais longa de renderizarmos um arquivo html utilizando loader:
+        template = loader.get_template('schedule/display_event.html')
+        rendered_template = template.render(context={'event': event}, request=request)
+        return HttpResponse(rendered_template)
+
+Banco de dados:
+    Memória secundária -> Arquivos de texto(CSV ou JSON)
+    Problemas:
+        Concorrência -> Criações ao mesmo tempo
+        Segurança -> Garantir acesso a uma única pessoa
+        Relação entre entidades -> Como representar
+        Gerenciar mudanças -> Criação de novos atributos
+        Falhas -> Caso não finalizar a operação...
+        Validade/Integridade -> Verificar se apenas coisas validas estão sendo escritas no arquivo
+
+    Bancos de dados foram desenvolvidos para gerenciar todos esses problemas.
+    Geralmente todas as coisas web tem: Client: request -> Server: Leitura, escrita -> Database: response -> Server: response -> Client
+    Bancos de dados relacionais, cuidam da relação entre objetos/entidades.
+    Cada entidade é uma tabela no banco.
+    Nós nunca teremos id's iguais.
+    Para relacionar tabelas, utilizamos as chaves estrangeiras, que utilizam o id da outra tabela, para representar o elemento. Sendo chave estrangeira, é possível repetir inumeras vezes. 
+    Exemplo de uma request no sql -> SELECT * FROM "events" WHERE creator_id=1
+    Django ORM -> Facilita para trabalharmos com banco de dados no Django.
+    Exemplo de uma request no ORM -> Events.objects.filter(creator_id=1)
+
+Django ORM e migrações:
+    SQLite é muito leve e simples e já vem por default.
+    Visualizamos no settings.py qual banco de dados estamos utilizando.
+    ORM -> Object Relational Mapping(Mapeamento de objeto relacional).
+    Para o ORM saber que precisa mapear uma classe no db, a classe do modelo precisa herdar de models.Model. Assim os atributos dessa classe, serão os atributos da tabela do db.
+    Unique faz com que não sejam criados duas vezes os mesmos valores na tabela.
+    Quanto usamos uma foreign-key, precisamos colocar coisas a mais, como o on_delete.
+    Nós estamos mapeando atributos para uma coluna no banco de dados.
+    Quando falamos de CharField, não é aconselhavel usar o valor null, pois podemos ter no banco o valor null e strings vazias, podendo causar confusões. Neste caso é melhor utilizar o blank=True.
+    Utilizamos o comando "python manage.py makemigrations", para fazer as migrações dos models, para o banco de dados.
+    As migrações vão aparecendo enquanto está "criando" o model.
+    Para executar as migrações utilzamos o comando "python mange.py migrate".
+    Para verificar se as migrações foram feitas corretamente, podemos utilizar o comando "python manage.py dbshell" que irá conectar um cliente no db e podemos inspecionar o banco de dados.
+    O comando .tables faz com que todas as tabelas apareçam no shell.
+    Para usar o comando dbshell precisamos ter alguns arquvios do sqlite na raiz do programa para conseguirmos rodar o comando e funcionar.
+
+Fazer consultas pelo shell:
+    É um shell do python, que inicia todo o projeto nele. Comando para acessar o shell -> python manage.py shell
+    Temos que importar as coisas que iremos utilizar.
+    Podemos criar objetos pelo comando -> Category.objects.create(atributes)
+    Podemos recuperar todos os objetos pelo comando -> Category.objects.all()
+    Podemos criar apenas instâncias dos objetos. Mas precisamos persisti-los depois. Ex: category = Category(name='Fullstack') -> category.save(). Dessa maneira o objeto será persistido no db.
+    Quando recebemos um QuerySet, recebemos uma lista de elementos. Para conseguirmos utilizar o elemento, pegamos na posição 0 da lista, para que apareça apenas o elemento desejado e não uma lista.
+    O id sempre será criado quando persistirmos o elemento no db.
+    Utilizando o ORM, podemos navegar entre as classes.
+    Podemos acessar elementos de outras classes, utilizando o nome do atributo e o nome que procuramos.
+    É bom treinar a criação de elementos no shell, para entender melhor o ORM.
+
+Django Admin:
+    Precisamos ter a rota do admin para que possamos acessar o admin do django.
+    Para criarmos um usuário utilizamos o comando python manage.py createsuperuser.
+    Na url do admin, já temos algumas coisas pré cadastradas.
+    Utilizamos o admin do nosso app, para cadastrarmos os nossos models, para que possamos visualiza-los no admin do django.
+    Nós utilizamos o admin para gerenciar o db.
+    Quando acessamos um elemento, os que tem o nome em negrito, significa que o campo não pode ficar em branco.
+    Utilizamos o __str__(self), para que possamos organizar como queremos que apareça o objeto no admin ou no próprio shell.
+    Precisamos ser um usuário staff ou superuser, para conseguirmos fazer modificações no admin.
+
+Listagem de eventos:
+    Precisamos pegar os eventos pelo comando Event.objects.all(), para conseguirmos ver todos os elementos no db.
+    Acessamos os valores pelo context que passamos no código.
+    Utilizamos um for para que possamos pegar cada um dos eventos e passar as informações na tabela.
+    O que irá aparecer é a representação que fazemos com o def __str__(self).
+    firstof, é uma função que o django recebe uma lista de elementos e ele retorna o primeiro que não for false.
+
+Adicionando data aos elementos:
+    Utilizamos o models.DateField() para definirmos um campo que é de data.
+    Quando fazemos a nova migração, a primeira irá aparecer.
+    Podemos usar o comando .nullvalue NULL, para que possamos ver os valores nulos no dbshell.
+    Podemos ajustar o formato das datas no próprio template.
+    Utilizamos pipes para colocar filtros no template html.
+    Utilizamos o Event.objects.filter() para filtrarmos os que tem datas do passado. Colocamos no filtro date__gte(Greater Than Equal)=today_date
+    Utilizamos a função date da lib datetime.
+    Utilizamos o order_by para ordenar a lista de eventos que pegamos.
+
+Buscando e exibindo eventos:
+    Quanto usamos get podemos ter problema, quando ele não encontrar o que procura e quando tem mais de um elemento.
+    Sempre bom colocar espaços antes e depois do que será escrito nas chaves duplas.
+    Caso não exista é bom colocarmos o 404. Utilizamos para isso a função get_object_or_404, nela passamos apenas o nome do objeto e os atributos que queremos considerar para o filter.
+    Passamos ainda assim os elementos pelo context.
+
+Navegando entre páginas da aplicação:
+    Para irmos até o index, podemos colocar no href uma /, que representará o index da aplicação.
+    Para acessarmos algo que precise de alguma informção do objeto, nós escrevemos o caminho e colocamos o que queremos que seja passado. Ex: /events/{{ event.id }}/
+    Podemos colocar também uma função da view, neste caso utilizamos o nome que damos para a url e passamos os parâmetros extras {% url 'display_event' event.id %}.
+    Podemos também colocar um nome na url do app, e podemos acessar da seguinte maneira: {% url 'schedule:details' event.id %} e passamos os parâmetros da mesma maneira que anteriormente, após colocar o nome da url.
+    Dessas duas maneiras, não precisamos nos preocupar com a modificação da chamada da url, pois não estamos modificando seu nome, mas sim a maneira que ela irá aparecer no navegador.
+
+Enviando um formulário:
+    models.IntegerField é usado para valores inteiros.
+    Em formulários precisamos utilizar o {% csrf_token %}, para que exista a segurança no envio de arquivos por formulário.
+    O csrf_token só é necessário em formulários do método POST.
+    Nós podemos pegar os elementos que passamos por request.POST.get('nome do que passamos')
+    É uma boa prática em desenvolvimento web, que após os formulários serem submetidos, nós redirecionarmos os usuários para outra página.
+    Podemos utilizar HttpResponseRedirect(reverse('nome da url', agrs={event_id,})) os args precisam ser uma tupla.

@@ -1,0 +1,13 @@
+Resumo módulo 5 Controle de Fluxo:
+
+Condicionais:
+    São precedidos apenas pelos ":" e pela identação, diferente de diversas linguagens que geralmente utilizam os "{}".
+    Os condicionais no python são um pouco diferentes, conhecidos por:
+        if -> Verifica inicialmente uma expressão
+        elif -> Possibilita verificar outros valores, após o if ser negado
+        else -> Caso o if e os elif sejam negados, o else será o valor default retornado pelo programa, geralmente como uma negação
+
+Repetição:
+    É o único laço de repetição do python, tem uma "expressão" que o mantém executando até que ela seja falsa.
+    Além das expressões ele pode ser parado utilzando a instrução "break", que finaliza o programa naquele exato lugar, não executando mais nada.
+    O laço while também é precedido dos ":" e precisa da identação para verificar o que será executado da mesma maneira que os condicionais.

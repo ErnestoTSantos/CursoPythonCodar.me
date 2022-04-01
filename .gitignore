@@ -6,33 +6,41 @@ Introdução/*
 
 Operadores/*
 !Operadores/Exercicios_Operadores
+!Operadores/resume.txt
 
 ControleFluxo/*
 !ControleFluxo/Exercicios_Controle_Fluxo
+!ControleFluxo/resume.txt
 
 EstruturaDados/*
 !EstruturaDados/Exercícios_estrutura_dados
+!EstruturaDados/resume.txt
 
 Functions/*
 !Functions/Exercícios_functions
+!Functions/Resume.txt
 
 POO/*
 !POO/Exercícios_POO
+!POO/resume.txt
+!POO/resume_on_class.txt
 
 DesenvolvendoUmaAPI/*
 !DesenvolvendoUmaAPI/Exercícios_API
+!DesenvolvendoUmaAPI/resume.txt
 
 FerramentasDev/*
 !FerramentasDev/Exercícios_ferramentas
+!FerramentasDev/resume.txt
 
 Flask/*
 !Flask/Exercícios_Flask
 !Flask/Exercício_ClassBasedViews
 !Flask/ToDO_ClassBased
+!Flask/resume.txt
 
 Django/venv
 Django/db.sqlite3
-Django/resume.txt
 Django/*.exe
 Django/.mypy_cache
 
@@ -50,10 +58,10 @@ Testes/*
 !Testes/grade_calculator
 !Testes/calculator.py
 !Testes/test_calculator.py
+!Testes/resume.txt
 
 drf-api/venv
 drf-api/db.sqlite3
-drf-api/resume.txt
 drf-api/*.exe
 drf-api/.mypy_cache
 drf-api/.coverage

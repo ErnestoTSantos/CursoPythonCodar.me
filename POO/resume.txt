@@ -1,0 +1,33 @@
+Resumo módulo 8 Classes:
+
+Tipos de objetos:
+    Existem dois tipos de objetos, sendo eles os imutáveis e os mutáveis.
+    
+    Os imutáveis, são os valores: 'Ernesto', 10, 16.87, etc... Esses valores são chamados de imutáveis, pois é criado um espaço de memória que representa apenas esse valor.
+    Neste caso uma variável irá referenciar o espaço de memória que esse objeto ocupa. 
+    Ex: 
+        ex_1 = 10, ex_2 = 10.
+        Ambas as variáveis apontam para o mesmo objeto/espaço de memória, se utilizarmos a função id(), poderemos ver que realmente ambas apontam para o mesmo objeto imutável.
+
+    Já os objetos mutáveis, tem uma grande diferença, são as listas, dicionários e set's. Esses valores são os mutáveis, pois por mais que sejam iguais, eles podem modificar, recebendo novos valores ou até mesmo excluindo algum elemento desses dados, então cada um desses objetos, por mais que sejam iguais, irão receber um espaço na memória específico.
+    Neste caso apeans a variável que está recebendo o objeto irá ter a sua referência.
+    Ex:s.
+        ex_list_1 = [1, 2, 3, 4, 5]
+        ex_list_2 = [1, 2, 3, 4, 5]
+
+        Por mais que essas duas listas sejam iguais, ao usarmos a função id, iremos ver que elas são diferentes, pois apontam para objetos diferentes. 
+        A única forma de vermos que elas apontam para o mesmo lugar é quando pegamos os valores separadamente.
+
+Classes e métodos de classe:
+    Existem três tipos mais específicos de classes, sendo eles: classmethod, staticmethod e métodos de instância.
+    classmethods -> São métodos específicos da classe, que podem afetar diretamente o objeto, podendo instancia-lo novamente a partir de um método de classe, esses métodos geralmente são chamados diretamente pela classe, sem precisar de objetos.
+    staticmethod -> São métods que não precisam necessáriamente estar dentro da classe, mas o dev acredita que esse método tenha algo a ver com a classe. Esses métodos não interferem em nada na classe ou objeto, pois não recebe nenhum desses valores, mas podem receber outros valores para serem utilizados na função.
+    instance -> São os métodos que recebem a instância da classe e afetam diretamente o objeto em que foram chamados, geralmente esses métodos modificam e retornam algo, como funções, mas apenas para o objeto específico.
+
+    Herança e Polimorfismo -> É uma forma de reaproveitarmos classes, porém, não devemos utilizar em qualquer classe a herança, devemos utilizar apenas em classes que façam sentido. A classe filha recebe todos os métodos e atributos da classe pai e pode fazer modificações, essas modificações são chamadas de polimorfismo. Isto é, a classe filha sobrescreve o método da classe pai, modificando suas ações.
+
+    Importação de Módulos -> Para importar módulos utilizamos a palavra reservada import que irá importar a biblioteca inteira ou podemos utilizar o import com um from antes que permite importar apenas uma função/classe da biblioteca.
+
+    F-strings -> É uma maneira mais elegante e fácil de apresentarmos coisas no python. Ex: f'Hello {name}' -> Dessa maneira irá apresentar "Hello Ernesto", pois na variável pode ter qualquer valor.
+
+    Utilização básica do JSON -> Importamos o JSON e utilizamos a função dumps, que converte um dicionário em um arquivo JSON, facilitando o transporte de informações pelas requisições HTTP.

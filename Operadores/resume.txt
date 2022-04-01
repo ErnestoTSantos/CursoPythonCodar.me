@@ -1,0 +1,30 @@
+Resumo módulo 4 Operadores no python:
+
+Os operadores aritméticos no python são divididos entre: 
+    + -> Realiza somas e concatena elementos
+    - -> Realiza as subtrações
+    * -> Realiza multiplicações, pode ser utilizado para repetir uma string -> ex: print('-' * 30)
+    ** -> Realiza potenciação dos valores
+    / -> Realiza a divisão de valores, podendo resultar em floats
+    // -> Realiza a divisão real, retorna apenas números inteiros da divisão
+    % -> Chamado de módulo realiza o resto da divisão, muito usado para saber se um número pelo outro é igual a 0
+
+Operadores relacionais são divididos entre:
+    Todos os operadores relacionais retornam valores booleanos, sendo eles True e False.
+    == -> Dois iguais, verificiando se um valor é igual ao outro
+    > -> Maior que, verifica se o valor da esquerda é maior que o da direita
+    < -> Menor que, verifica se o valor da esquerda é menor que o da direita
+    >= -> Maior ou igual, verifica se o valor da esquerda é maior ou igual o da direita
+    <= -> Menor ou igual, verifica se o valor da esquerda é menor ou igual o da direita
+
+Operadores lógicos são divididos entre:
+    Os valores lógicos utilizam expressões parecidas com os relacionais e retornam um booleano também, mas esse booleano é composto.
+    not -> Nega o valor, sendo assim um valor = True vai ser transformado para False e vice versa
+    and -> Precisa que os dois valores ou mais sejam iguais a True para que possa retornar True na expressão
+    or -> Precisa que ao menos um dos dois valores ou mais seja igual a True, para que retorne um True sobre a expressão exposta
+
+Input's do usuário:
+    Utilizamos a função input = ('Escrevemos algo para o usuário'...)
+    Os valores recebidos em input's sempre serão strings. Então ao recebermos números, para tratarmos eles precisamos
+    tratar esse valor, transformando ele com o int() ou float() para números que possam realmente ser trabalhados no código
+    como números realmente.

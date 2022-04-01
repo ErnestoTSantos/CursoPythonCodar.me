@@ -1,0 +1,54 @@
+Resumo módulo 7 funções:
+
+Definindo de funções:
+    Para definirmos funções utilizamos a palavra reservada "def", que cria a função.
+    Além de apenas serem criadas, as funções executam uma série de passos e podem receber diferentes argumentos.
+    Os argumentos das funções são de escopo local, fazendo com que sejam acessados apenas na função.
+    Para chamarmos uma função que tem argumentos, devemos cuidar a posição caso queiramos escrever na ordem que foram escritos, pois os argumentos são posicionais, ou seja, ao chamarmos a função e não nomear cada um dos elementos passados, a função os colocará na ordem dos argumentos da função, por mais que não estejam na ordem correta.
+    Ajuda na legibilidade do código nomear os argumentos ao chamar uma função.
+    Ex:
+        def welcome(curse_name):
+            return f'Welcome to course of {curse_name}'
+    Além disso, as funções tornam os códigos mais legiveis e trazem uma facilidade muito maior na manutenção dos mesmos.
+
+Retorno de valores:
+    Geralmente funções recebem parâmetros e retornam os parâmetros modificados, ou retornam valores que utilizam esses parâmetros.
+    Essas funções utilizam a sintax básica para essa criação, a criação da função, a ordenação dos parâmetros parâmetros e dentro do escopo dela é possível realizar diversas ações, como acessar bancos de dados, somar coisas...
+    Ex:
+        def calculate_count(consumption, service_rate, faithfulness):
+            service = consumption * service_rate
+            discount = consumption * faithfulness
+            value = consumption + service
+            value -= discount
+            return f'O valor a ser pago é: {value}'
+
+        Nesta função são passados os parâmetros: Consumo, A porcentagem do garçom e fidelidade e a função retorna um cálculo do valor a ser pago pela pessoa, já com os acréscimos e descontos da conta.
+        Para apresentar o valor dessa função, a maneira correta é colocar em uma variável e utilizar o print com a variável, que o resultado irá ser passado, pois o return não apresenta o valor no terminal ou no site.
+
+Argumentos default:
+    Algumas funções podem ter argumentos padrão, então ao serem chamadas não é obrigatório passar um valor para o parâmetro que tem o valor default.
+    Ex:
+        def calculate_count(consumption, faithfulness, service_rate=.1, ):
+            service = consumption * service_rate
+            discount = consumption * faithfulness
+            value = consumption + service
+            value -= discount
+            return f'O valor a ser pago é: {value}'
+        
+        Na função acima, o parâmetro de porcentagem do garçom, já está como default em 10%, caso o usuário queira passar um valor maior ou menor ou até mesmo remover esse parâmetro, é necessário passar para a função, mas se desejar manter os 10%, não será necessário passar valro algum.
+        Além disso, para manter a organização, o python obriga que os arumentos que tenham valores default, sejam colocados no final, após os argumentos que precisam de valroes ao chamar a função.
+
+Early Return:
+    Algumas funções podem ter como padrão uma verificação básica para evitar a sobrecarga e o uso desnecessário de memória. Sendo assim, essas funções tem um condicional, que verifica alguma coisa e caso essa coisa ou coisas sejam verdadeiras ela já tem um return, que retorna ao usuário o apenas o importante.
+    Ex:
+        def calculate_count(consumption, service_rate, faithfulness):
+            if service_rate == 0 and faithfulness == 0:
+                return consumption
+
+            service = consumption * service_rate
+            discount = consumption * faithfulness
+            value = consumption + service
+            value -= discount
+            return f'O valor a ser pago é: {value}'
+
+        Desse jeito, caso os valores sejam iguais a zero a função irá retornar apenas o valor do consumo.

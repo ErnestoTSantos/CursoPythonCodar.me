@@ -1,0 +1,32 @@
+Resumo módulo 10 Ferramentas do Desenvolvedor
+
+Interagindo com nossa API via CURL:
+    No cotidiano utilizamos muito mais o terminal externo para realizar coisas nas aplicações, geralmente trabalhamos com duas telas ao utilizarmos o CURL.
+    Podemos inicializar nosso servidor direto no terminal pelo comando "python3 'nome do programa'.py.
+    Utilizamos o CURL direto no terminal de comando, computadores com sistemas UNIX e MacOS já tem ele por default, mas com o WSL conseguimos utilizar sem fazer instalações extras.
+    A utilização do CURL é meio chata, pois precisamos fazer todas as requisições na mão.
+    O CURL para o cotidiano não é a melhor das ferramentas, por conta da verbosidade para utilização.
+
+Requisições com Postman:
+    Facil utilização, permite salvar as URL's, para que não seja necessário ficar relembrando as requisições.
+    Podemos fazer qualquer tipo de requisição, GET, POST, PUT, DELETE...
+    Nas ferramentas do desenvolvedor, podemos pegar o caminho em formato de CURL, para fazermos as requisiçõe de teste.
+    Em questão de utilização, tanto o CURL quanto o Postman, facilitam o trabalho do dev, fazendo com que possamos realizar os testes sem necessariamente acessar o navegador.
+    Podemos importar a CURL no Postman e visualizar ela, para vermos de uma maneira mais detalhada.
+    Utilizamos muito o Postman para facilitar os testes de requisições e respostas.
+
+Configurando um ambiente virtual(venv):
+    É uma estrutura de arquivos que cria uma "cópia" do python, salvando as bibliotecas em uma outra pasta, fazendo com que cada projeto tenha suas próprias dependências.
+    venv -> Virtual environment
+    Quando ativamos o ambiente virtual, "enganamos" o nosso computador, para que ele olhe apenas as coisas no ambiente virtual.
+    Divide os ambientes virtuais dos projetos, facilitando a organização dos projetos e da máquina.
+    Comando para iniciar o ambiente virtual:
+        python -m venv venv
+    Comando para ativar o ambiente virtual no windows:
+        cd venv/scripts/activate
+    Comando para desativar o ambiente virtual:
+        deactivate
+    Comando para instalar os elementos requisitados no ambiente virtual:
+        python -m pip install -r requirements.txt
+
+

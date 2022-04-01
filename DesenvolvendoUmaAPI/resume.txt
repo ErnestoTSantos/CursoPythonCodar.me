@@ -1,0 +1,40 @@
+Resumo módulo 9 Desenvolvendo uma API:
+
+Revisão HTTP:
+    Navegador -> Cliente
+    Servidor -> Programa em python que retornará as respostas
+
+    A request precisa ter três partes -> 
+        Tipo do request(GET, POST, PUT, DELETE...). 
+        Conjunto de cabeçalhos(Meta dados, informações do próprio cliente). 
+        Dados(Formulários para criação de algo)
+
+    A response tem três partes também ->
+        Status code
+        Cabeçalhos(HTML, Imagem em JPG, JSON...)
+        Dados(Informações em página para ser desenhadas ao client)
+
+    API's que retornam JSON trazem uma liberdade para que o client utilize a aplicação que quiser para consumir o JSON, podendo ser uma aplicação web, um aplicativo...
+
+Implementando um server HTTP:
+    Inicialmente precisamos acessar a biblioteca http.server e importar as classes BaseHTTPRequestHandler, HTTPServer. O BaseHTTPRequestHandler irá ser utilizado como classe pai de um handler que criaremos para nossas ações, pois ele não sabe lidar com as mesmas e o HTTPServer irá saber onde o servidor irá rodar e a porta, junto do handler a ser utilziado para ter os requests/responses.
+    A função do HTTPServer server_forever() irá ficar com o servidor ativo, fazendo com que ele rode na máquina por tempo indeterminado, sem se preocupar com modificações no código.
+    Ao criarmos nosso handler, precisamos implementar métodos, para as ações que iremos fazer. Esse método deve enviar uma resposta, headers para o seu encode para que o navegador consiga "compreender" o código e o que deve ser escrito, para o que será escrito na página, precisamos converter para código binário utilziando a função .encode().
+
+Exibindo lista de eventos:
+    Utilizamos o "self.path", para controlar as requisições com os controladores de fluxo e as requisições desconhecidas retornam um notfound.
+    Fazemos um for nos elementos que estão em uma lista para adiciona-los em uma variável, para que possamos realizar o acoplamento.
+    Neste caso os controladores de fluxo servem para mantera a organização e evitar que os clientes façam qualquer request.
+    Quando já enviamos as coisas prontas é chamado de acoplamento, pois o client não escolhe como irá apresentar.
+    API's rest geralmente retornam um JSON, possibilitando ao cliente apresentar essas coisas da melhor maneira na tela.
+    Retornar elementos como JSON é uma das melhores formas, pois trás um controle melhor para o usuário.
+
+Retornando eventos como JSON:
+    Geralmente quando uma request é /api/.../ é para demonstrar que o que está sendo retornado é um JSON.
+    Os elentos JSON são mais leves, fazendo com que as respostas sejam mais rápidas, apenas precisando ajustar a forma que iremos interpretar o dicionárioo.
+    JSON é uma representação dos nossos dados.
+    Fazemos uma lista com dicionários, para realizarmos a conversão de dicionário para um elemento JSON.
+    A função dumps do JSON, só consegue converter elentos dicionários. Não consegue converter objetos de classes ou algo do tipo.
+    Ao retornar um elemento json para o navegador, ele irá apresentar as coisas como um dicionário, na request.
+    JSON formatter é uma extensão do JSON no chrome para apresentar o JSON de uma maneira mais organizada no navegador.
+    Ao utilizar a biblioteca padrão do python, notamos que o código fica extremamente verboso para realizar ações simples. Demonstrando o quanto os frameworks podem facilitar e auxiliar na nossa vida.

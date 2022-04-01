@@ -1,0 +1,81 @@
+Resumo módulo 11 API com Flask
+
+class based views Flask -> https://flask.palletsprojects.com/en/2.0.x/api/?highlight=class#class-based-views
+
+Flask é um microframework
+
+Podemos separar em funções de maneira mais fácil
+
+Introdução ao flask:
+    Precisamos utilizar no nosso ambiente virtual o pip install para realizar a instalação do flask no projeto.
+    Utilizamos flask run para rodar a aplicação.
+    Não precisamos nos importar com a códificação, apenas precisamos reiniciar nosso servidor ao modificarmos algo.
+    Precisamos dar um nome a aplicação, geralmente utilizamos o __name__ que irá colocar o nome da aplicação no Flask.
+    Iniciamos ele como um objeto em uma variável.
+    Utilizamos o route com decorators, para definir as rotas em funções.
+    O flask, já faz todo o básico essencial para que a aplicação funcione desde o principio, sem precisar enviar os cabeçalhos e outras informações.
+
+Variáveis de ambiente no Flask:
+    O flask não irá acessar caminhos que não estejam cadastrados.
+    FLASK_APP:
+        Aponta qual a aplicação python que será rodada na aplicação flask. Pois teremos vários arquivos.
+        No próprio ambiente virtual, fazemos set FLASK_APP=app.py, para podermos rodar a aplicação só no comando flask run, será considerada a variável de ambiente. 
+        app.py é o nome padrão para o FLASK_APP.
+        Link para setar a variável de ambiente do FLASK_APP no Windows -> https://flask.palletsprojects.com/en/1.0.x/cli/
+    FLASK_ENV:
+        Utilizamos o comando FLASK_ENV=develpment, para que o servidor atualize sozinho a cada modificação.
+        Devemos coloar set FLASK_ENV=develpment, para que fucione. Devemos colocar primeiro o FLASK_ENV e depois o FLASK_APP, para que tudo funcione corretamente.
+
+    Precisamos realizar o cadastro das variaveis todas as vezes que iniciarmos o ambiente virtual(Ao menos para mim está assim.).
+
+Listar eventos:
+    É melhor que as url's terminem com uma "/" para evitar ambiguidades.
+    Podemos fazer o retorno dos eventos como fizemos ao desenvolver uma API, colocando todos eles em uma lista e pegando os elementos em um for, retornando uma lista de dicionários, convertendo para JSON.
+    Temos que definir o content type, pois o flask por padrão acha que a resposta é um html.
+    Podemos forçar o flask a mudar, usando a classe Response do flask. Mas o melhor é usar o jsonify do próprio flask, pois ele já transforma em uma resposta json, mas também realiza todas as modificações necessárias.
+    O python tem por padrão nos métodos mágicos dele um método que transforma tudo em dicionário. ex: Events.__dict__. Ele transformará todos os atributos em um dicionário.
+    Para utilizarmos o Postman para testar a aplicação precisamos utilizar o 'http://127.0.0.1:5000/api/events/', pois ele não roda a aplicação em localhost como estavamos fazendo no servidor com as bibliotecas build in.
+
+Detalhar eventos:
+    Colocamos após a barra do nome eventos, um atributo, com o tipo, para demonstrarmos que enviaremos algo a mais na requisição.
+    Fazemos um for, como padrão e verificamos se algum dos elementos tem o ID igual ao que foi passado na requisição.
+    O elemento que retornamos é chamado de recuso quando falamos de API's rest.
+
+Lidando com erros:
+    Utilizamos o método abort do próprio Flask. Ele se importará em tratar os erros e lança-los, chamando a função com decorator do errorhandler.
+    Devemos enviar um código como 404 e uma mensagem, para aparecer quando o objeto da request não for encontrado.
+    Podemos utilizar outra função do Flask, que retorna como JSON os elementos, a função make_response cria literalmente um objeto de resposta, quer um dado e um código de resposta. Precisamos utilizar ela com a função do jsonify, para fazer a conversão do objeto e já trocar o header para raw/json.
+    errorhandler precisamos criar uma função, que receberá o erro, precisamos transformar esse erro em uma str, para podermos retornar um json, pela função jsonify.
+    Na função jsonify, podemos colocar apenas o jsonify(error=str(error)), em teoria estamos passando um dicionário para a função.
+
+Criando novo evento:
+    Precisamos utilizar o método request.data, que irá pegar os elementos que serão passados quando a request for feita.
+    Convertemos o elemento que recebemos na request para uma lista com o json.loads.
+    Se o elemento retornar um dicionário, por padrão ele irá converter esse dicionário para um elemento json.
+    Parciar -> Pegar informações em um formato, converter e ler de outra maneira.
+    Pasing -> Quando transformamos dados JSON para uma lista/dicionário.
+    Até o momento, por utilizarmos listas, ao recarregarmos o servidor, os novos eventos criados, não serão apresentados, apenas os que estão estáticos.
+    Regras de negócios, são como as aplicações funcionam.
+    Depois de transformarmos os dados do usuário, precisamos fazer verificações.
+    É uma boa prática indicar ao usuário como acessar esse elemento que foi criado.
+    Ao retornar uma forma de utilizar, melhora a comunicação do usuário com a API.
+    Nossa API não precisa retornar as mesmas coisas que o nosso modelo.
+
+Deletar evento:
+    Para boas práticas o melhor é retornar id=id.
+    Precisamos colocar o methods=["DELETE"].
+    Podemos colocar o mesmo caminho para fazer as coisas.
+    Refatoramos o código, para usar uma mesma função para trazer o elemento desejado em mais de uma view. Pois assim não temos verbosidade e mantemos a organização.
+    Colocamos o abort na própria função, para que ela chame os erros caso necessário.
+
+Atualizar eventos:
+    Precisamos fazer o parsing.
+    Mudar para methods=["PUT"]
+    request.get_json() -> é um método do json que recebe um json e já converte ele para o dicionário.
+    O PUT irá precisar passar todos os atributos para que possamos realizar uma atualização no evento.
+    Os eventos são modificados, mas seus id's não.
+
+Editar evento parcialmente:
+    Rest é um padrão que utilizamos o PUT para subistituir todos os valores e o PATCH para alguns valores.
+    Parecido com o PUT, mas o PATCH permite que atualizemos apenas algumas coisas sem obrigar a atualizar tudo.
+    Fazemos as verificações nas chaves do dicionário que foi convertido pela função get_json() da request.

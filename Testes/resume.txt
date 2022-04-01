@@ -1,0 +1,75 @@
+Resumo módulo 13 - Escrevendo testes automatizados
+
+O que são testes:
+    Existem testes manuais e testes automatizados, os manuais podem ser feitos pelo python shell e a cada mudança seria necessário ir ao terminal para testar e erros poderiam aconceter com muita facilidade.
+    A melhor maneira é trancrever as execuções, como um novo arquivo, para que ele execute as funções e as compare, verificando se ela retorna os valores esperados.
+    É muito bom executar os testes toddas as vezes que fazemos modificações no código.
+
+Escrevendo nosso script de testes:
+    Normalmente nós nomeamos o arquivo com test_nome_do_que_testaremos.py.
+    Realizamos o teste e caso o teste retorne um fail, precisamos retornar ao código para verificar o que está ocasionando o erro.
+    É possível fazer isso com vários programas ao mesmo tempo, além disso os testes trazem uma maior legibilidade ao código.
+
+Utilizando a biblioteca Unittest:
+    É extremamente massante ficar escrevendo os testes com if/else, que não trás grandes informações da falha.
+    A biblioteca facilita a escrita e a execução dos testes.
+    Precisamos criar uma classe com o nome do que será testado e ela precisa herdar de unittest.TestCase.
+    Para escrever o teste, precisamos transformar cada um dos casos em uma função.
+    A biblioteca trás uma mensagem e especifica onde está o erro encontrado.
+    Pontos demonstram que os testes passaram e F's demonstram que eles falharam.
+
+Desenvolvimento orientado à testes(TDD):
+    TDD = Test Driven Development
+    Neste caso, nós devemos escrever os testes antes da nossa lógica, para verificarmos o que o método deveria fazer.
+    Testamos os efeitos colaterais que o método terá no objeto.
+    O melhor é termos o teste primeiro, fazendo com que ele falhe inicialmente, para verificarmos o método.
+    RED -> GREEN -> REFACTOR: Ordem para seguirmos no TDD.
+    É uma filosofia/prática de programar.
+    Sempre bom fazer testes, trás uma demonstração de controle e conhecimento melhor.
+
+Date e Datetime:
+    Date -> Utilizada para representar datas.
+    Datetime -> Utilizada para representar datas com tempos.
+
+    Importamos de datetime -> date, datetime
+    date.today() -> Trás o dia de hoje.
+    hoje = date(2022, 03, 08) -> Ele cria a data com esses valores, na ordem -> year - month - day
+
+    agora = datetime.now() -> Vai trazer o dia com as horas, minutos, segundos e milisegundos.
+    antes = datetime(2022, 03, 08, 7) -> Onde o objeto será criado com os valores que estão passados sem os segundos e milisegundos.
+
+    Podemos comparar as datas utilizando os operadores relacionais.
+
+Testando com datetime:
+    Temos que cuidar, pois o datetime não pode ser simplesmente modificado.
+    Podemos resolver de várias maneiras, mas a mais interessante é por uma biblioteca que o próprio python trás, a função é a timedelta da biblioteca datetime.
+    Utilizamos o timedelta da seguinte maneira -> datetime.now() + timedelta(days=3) -> Podemos somar meses, dias, horas, minutos, segundos...
+    Para fazermos a adição de tempo nos elementos com datetime precisamos utilizar o +=, pois somente assim poderemos ter a atribuição do valor à variável.
+
+Testando lista de tarefas:
+    A melhor maneira de fazer as validações é utilizando o assertEqual.
+    É sempre importante vermos os testes quebrando, para termos certeza de que estamos fazendo as coisas da maneira correta e principalmente verificar se não esquecemos de nada.
+    Existem vários asserts, pois nem sempre é possível utilizar o equal, então temos outros para serem mais dinâmicos.
+
+Testando o projeto Django:
+    Entramos para fazer os testes no arquivo tests.py.
+    Por mais que o nome também seja TestCase, o TestCase do Django tem algumas diferenças que trazem melhorias do TestCase do unittest.
+    O navegador é um cliente da aplicação/servidor e o TestCase do Django, já trás um test client, porém precisamos importar Client.
+    self.assertContains, verifica se na resposta existe o trecho de código que estamos querendo.
+    Geralmente vale muito mais a pena testar valores "maiores" e não tão específicos, para que não seja necessário modificar o teste a cada modificação no código ou template.
+    Podemos testar o template pelo self.assertTemplateUsed(), para que não precisemos fazer o teste de coisa por coisa no código e sim verificar o elemento geral.
+    Acostumar com as mensagens dos testes, pois elas são muito claras.
+
+Testando a listagem de eventos:
+    Testamos com o happy path -> Caminho feliz. Ou seja o que já esperamos.
+    Todas as vezes que utilizamos os testes do Django, ele cria um db específico para aquele teste, para que as coisas não fiquem bagunçadas.
+    Traduzindo, temos dois db, um de teste e outro de produção.
+    Podemos testar os elementos que a view está passando para o front.
+    O queryset é diferente de uma lista.
+    Podemos converter um Queryset para uma lista, para verificarmos o que está sendo passado.
+    O queryset vai sempre ser diferente de uma lista caso não seja convertido.
+
+Expondo um bug com testes:
+    Podemos utilizar o exclude que é utilizado para excluir os elementos que satisfazem os requisitos que estão sendo passados.
+    O Django criará um db para cada teste, por isso quando criamos vários elementos em um teste e um só em outro, esses testes não entram no outro teste.
+    Ao final de cada teste ele deleta tudo, para que um teste não afete o outro.

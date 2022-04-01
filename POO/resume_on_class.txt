@@ -1,0 +1,81 @@
+Tudo no python é um objeto.
+
+Abstração:
+    É um dos conceitos mais importante do POO.
+    Parte de uma ideia de algo concreto, mas que não precisa necessariamente estar ali no momento.
+    É um elemento que compõem uma série de passos para realizar uma ação.
+    Nem sempre precisamos saber como, precisamos saber apenas como utilizar...
+
+Encapsulamento:
+    Serve para proteger os atributos da classe, para evitar de cometer erros ou mudar as coisas magicamente, sem realizar as ações necessárias.
+    O @property não é muito utilizado no python.
+    @property -> Servem para verificar alguma situação de um atributo na classe.
+    @setter -> Precisa de um property para poder ser definido. Protege, para que o atributo não seja passado de qualquer maneira, mas não é muito utilizado.
+
+    Atributos privados:
+        Colocamos um _, para representar que esse atributo é privado e não necessariamente deve ser acessado fora da classe.
+        O _ seria como se fosse um aviso apenas, para demonstrar que esse atributo é importante para a classe.
+
+        Os __ não permite que os atributos sejam acessados fora da classe, finge que ele é privado fora da clsse.
+        Para utilizar um atributo com os dois _, ele precisa ser acessado pelo caminho da classe.
+        É privado, mas fazendo uma força é possível accesar.
+
+Herança:
+    Reaproveitamento de códigos e moderar relações já existentes.
+    Manter organização e manutenção dos códigos.
+
+Early abstraction:
+    As abstrações devem surgir após a criação de coisas qeu vemos que tem elementos em comum, não fazer as abstrações antes e fazer a herança.
+
+Polimorfismo:
+    Trata diferentes tipos de arquivos de uma mesma maneira.
+    Classes que herdam de uma mesma classe, podem ter o mesmo método, mas que realizam ações diferentes.
+    Ele trata os objetos como detentores do método e nada mais. Sem se importar com o que os métodos fazem.
+
+Classes e métodos abstratos:
+    É mais comum de utilizarmos do que os property's.
+    Colocamos a classe e os métodos que desejamos com algumas coisas -> ABC e @abstractmethod
+    O abstractmethod irá fazer o método ficar abstrato e não precisará ser criado nada na classe.
+    O ABC, faz com que a classe fique abstrata e não precise implementar todos os elementos.
+
+Tipagem:
+    Dinâmica e estática.
+    Dinâmica -> É quando a tipagem da variável é definida apenas quando a variável recebe o valor.
+    Estática -> É quando uma variável recebe apenas um tipo primitivo.
+
+    Python tem uma tipagem mais forte, não somando ou concatenando alguns elementos quando eles não são do mesmo tipo.
+
+    Mesmo com o type hint o python não mantém o elemento estático, ele apenas auxilia o desenvolvedor a visualizar os atributos.
+
+Duck typing:
+    Não quer saber o tipo do elemento, só quer saber se tem o método que vai ser utilizado.
+    Mais comum em tipagens dinâmicas.
+    Não importa se o método faz sentido ali ou não.
+
+Métodos mágicos:
+    add -> Permite realizar soma com o +.
+    repr -> Retorna a representação do objeto, não apenas o que ele seria.
+    str -> Retorna algo como se fosse o print do objeto, retorna as informações consideradas mais importantes.
+
+Dataclass:
+    É um método mágico, que facilita criar os atributos de uma classe. É necessário passar o tipo ou colocar o valor default.
+    Tranformar nossa classe em um objeto imutável, podemos colocar frozen=True, congelando o objeto após sua criação.
+
+Relacionamento entre entidades:
+    Agregação:
+        Um pouco mais fraca em contexto geral.
+        Junta vários objetos que tem a mesma classe inicial.
+        Quando o elemento que agrega é deletado, não necessariamente os objetos são deletados junto. Pois eles podem ser utilizados novamente.
+
+    Composição:
+        Por ser mais junto, os objetos dependem um do outro e tem o chamado efeito cascata.
+        O elemento não existe sem o todo.
+        Ex: Livros e páginas.
+        O chamado efeito cascata.
+        Dependendo da situação a ação a ser realizada pode variar.
+
+    Dependência:
+        Quando uma classe ou elemento dependa de outra, o objeto pode quebrar a classe dependente.
+        Um código que tem muitas dependências, pode ser ruim. Pois o código pode ficar muito frágil e consequentemente quebrar por poucas mudanças.
+        As lógicas de negócios são muito envolvidas nessa parte de dependência.
+        

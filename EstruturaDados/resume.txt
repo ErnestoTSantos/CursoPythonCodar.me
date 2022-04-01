@@ -1,0 +1,88 @@
+Resumo módulo 6 Estruturas de dados:
+
+Listas:
+    São estruturas mutáveis, ordenadas(utilizam a ordem de inserção).
+    As listas podem ser iniciadas das seguintes maneiras:
+        list_ex = list()
+        list_ex = []
+        list_ex = [1, 2, 3, 4, 5]
+        Sendo assim, as listas são representadas pelos colchetes e podem iniciar contendo ou não algum conteúdo
+    
+    As listas também possuem alguns métodos específicos delas sendo eles:
+        append -> Insere um novo elemento no final da lista
+        insert -> Insere um novo elemento em uma posição específica da lista
+        remove -> Remove um elemento específico
+        pop -> Por default remove o último elemento da lista, mas podemos passar um índice existente e deletar o elemento que está nesse índice
+        sort -> Ordena a lista por default organiza os elementos por ordem crescente, mas podemos usar o reverse para ordenarmos de forma decrescente
+        sorted -> Criamos uma variável e utilizamos o método sorted(nome da lista), assim será criada uma nova lista e ordenará os elementos
+        count -> Recebe um elemento ao ser chamado e conta quantos desse elemento tem na lista
+
+    Para acessarmos elementos nas listas utilizamos o nome e o índice. Ex: list_ex[0], neste caso estamos pegando o elemento na posição 0 da lista de exemplo
+    Podemos utilizar o print(list_ex), assim iremos printar a lista toda.
+
+Tuplas:
+    São estruturas imutáveis(Não permitem modificações), ordenadas(Também utilizam a ordem de inserção)
+    As tuplas podem ser iniciadas das seguintes maneiras:
+        tuple_ex = tuple()
+        tuple_ex = 1,
+        tuple_ex = (1,)
+        tuple_ex = (1, 2, 3,)
+    
+    Também possuem alguns métodos específicos:
+        count -> Recebe um elemento e conta quantas vezes ele aparece
+        index -> Recebe um elemento e retorna o primeiro index que ele aparece
+        As tuplas por serem imutáveis, não possuem métodos da modificações como as listas
+
+    A melhor maneira de pegar os elementos nas tuplas é utilizando o método de desempacotamento, pois as tuplas geralmente são utilizadas para dados compostos, 
+    também para reduzir erros de código e leituras. Pois ao utilizarmos tuplas o código fica mais "leve".
+
+Conjuntos:
+    São estruturas mutáveis também, mas não utilizam a ordem de inserção no elemento, sendo assim a cada apresentação do set/conjunto ele irá trazer os dados em uma ordem diferente.
+    Os set's não permitem elementos iguais 
+    Os set's podem ser iniciados das seguintes maneiras:
+        set_ex = set()
+        set_ex = {'Alice', 'Bob', 'Joana', 'Maria', 'Júlia', 'Ana'}
+
+    Os set's também possuem métodos específicos para realizar ações.
+        add -> Adiciona um elemento no set
+        remove -> Remove um elemento específico no set
+        intersection -> Pega os elementos iguais nos dois set's
+        union -> Faz a união de dois set's, não copiando os elementos iguais
+        difference -> Apresenta as diferenças do set da esquerda para o da direita, apresentando os elementos que tem diferente apenas considerando o primeiro set
+        pop -> Remove o primeiro elemento que aparece no set naquele momento, por não ter uma ordem específica
+        symmetric_difference -> Apresenta elementos diferentes nos dois set's
+
+Dicionários:
+    São estruturas mutáveis, ordenadas(utilizam a ordem de inserção dos elementos).
+    Os dicionários utilizam um esquema de key:value, onde precisamos utilizar a chave para acessar o valor. 
+    Ex: notes = {'Ernesto': 10, 'Ana': 8.5, 'Júlia': 9,}, para acessarmos a nota do elemento Ernesto fazemos -> notes['Ernesto']
+    Os dicionários podem ser iniciados das seguintes maneiras:
+        dict_ex = dict()
+        dict_ex = {}
+        dict_ex = {'Ernesto': 10, 'Ana': 8.5, 'Júlia': 9,}
+        
+    Os dicionários como todas as outras estruturas possuem métodos específicos:
+        values -> Retorna todos os valores do dicionário
+        items -> Retorna todas as chaves e valores do dicionário
+        keys -> Retorna todas as chaves do dicionário
+        get -> Retorna o valor da chave que foi enviada
+
+    Podemos fazer como nas tuplas e desempacotar elementos do dicionário, porém essa prática não é muito comum.
+    
+Iterador:
+    Para iterarmos elementos de estruturas utilizamos o método for, ele é considerado um iterador, pois não pode realizar laços, para fazer algo parecido com um laço precisamos utilizar o range, mas essa prática não é comum.
+    Ao utilizarmos o iterador for, montamos a estrutura da seguinte forma:
+        notes = [4.6, 9, 10, 3.98, 7.89]
+        for note in notes:
+            print(note)
+
+        Como o while e o if/elif/else ele precede os ":" e precisa ter a identação para saber o que executar.
+    
+    O for pode iterar dicionários, set(mas não tem uma ordem específica para essa iteração), listas e tuplas. Podendo fazer o desempacotamento da mesma maneira.
+
+    Para iterar elementos e sepa-los podemos usar as listComprehension/dictComprehension... Que é uma maneira mais elegante de pegar elementos e inserir em uma outra lista.
+    Ex:
+        notes = [4.6, 9, 10, 3.98, 7.89]
+        notes_ex = [note for note in notes if note >= 8]
+
+        Neste caso a lista estará adicionando os elementos maiores que 8 na nova lista
