@@ -6,11 +6,14 @@ from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from schedule.serializers import (EmployeeEstablishmentSerializer,
+from schedule.models import (Address, Employee, Establishment, Faithfulness,
+                             Scheduling)
+from schedule.serializers import (AddressEstablishmentSerializer,
+                                  AddressSerializer,
+                                  EmployeeEstablishmentSerializer,
                                   EmployeeSerializer, EstablishmentSerializer,
                                   ProviderSerializer, SchedulingSerializer)
-
-from .models import Employee, Establishment, Faithfulness, Scheduling
+from schedule.utils import is_holiday
 
 
 class IsOwnerOrCreateOnly(permissions.BasePermission):
@@ -41,7 +44,14 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
         provider_user = data['provider']
         provider = User.objects.filter(username=provider_user).first()
         client_name = data['client_name']
+        date = data['date_time']
+        date = datetime.strptime(date[:10], '%Y-%m-%d').date()
         establishment = request.query_params.get('establishment', None)
+
+        holiday = is_holiday(date)
+
+        if holiday:
+            raise serializers.ValidationError('Infelizmente agendamentos não podem ser realizados em feriados!')  # noqa:E501
 
         establishment_obj = Establishment.objects.filter(name=establishment)
 
@@ -50,7 +60,7 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
         if establishment_obj.exists():
             if Employee.objects.filter(provider__username=provider_user, establishment=establishment_obj.first()).exists():  # noqa:E501
                 if obj.exists():
-                    obj = obj[0]
+                    obj = obj.first()
                     if obj.level < 11:
                         obj.level += 1
                         obj.save()
@@ -86,6 +96,7 @@ class SchedulingDetail(generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, id, *args, **kwargs):
         username = request.user.username
         confirmed = request.query_params.get('confirmed', None)
+        data = request.data
 
         if confirmed == 'True' or confirmed == 'true':
             obj = Scheduling.objects.filter(provider__username=username, id=id).first()  # noqa:E501
@@ -95,6 +106,9 @@ class SchedulingDetail(generics.RetrieveUpdateDestroyAPIView):
             obj.confirmed = True
             obj.states = 'CONF'
             obj.save()
+        else:
+            if data == {}:
+                raise serializers.ValidationError('É necessário passar algum elemento para ser atualizado!')  # noqa:E501
 
         return super().patch(request, *args, **kwargs)
 
@@ -104,10 +118,12 @@ class SchedulingDetail(generics.RetrieveUpdateDestroyAPIView):
         instance.states = 'CANC'
         instance.save()
 
-        faithfulness = Faithfulness.objects.filter(provider__username=instance.provider, client=instance.client_name).first()   # noqa:E501
-        if faithfulness.level > 0:
-            faithfulness.level -= 1
-            faithfulness.save()
+        faithfulness = Faithfulness.objects.filter(provider__username=instance.provider, client=instance.client_name)  # noqa:E501
+        if faithfulness.exists():
+            faithfulness.first()
+            if faithfulness.level > 0:
+                faithfulness.level -= 1
+                faithfulness.save()
 
         return Response(status=204)
 
@@ -120,12 +136,20 @@ class ProviderList(generics.ListAPIView):  # noqa:E501
     permission_classes = [permissions.IsAdminUser]
 
 
-class EmployeeEstablishment(generics.ListAPIView):
+class EmployeeEstablishmentList(generics.ListAPIView):
 
     serializer_class = EmployeeEstablishmentSerializer
     queryset = User.objects.all()
 
     permission_classes = [permissions.IsAdminUser]
+
+
+class EstablishmentAddressList(generics.ListAPIView):
+
+    serializer_class = AddressEstablishmentSerializer
+    queryset = Establishment.objects.all()
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class EmployeeList(generics.ListCreateAPIView):
@@ -136,12 +160,43 @@ class EmployeeList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
+class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    permission_classes = [permissions.IsAdminUser]
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    lookup_field = 'id'
+
+
 class EstablishmentList(generics.ListCreateAPIView):
 
     serializer_class = EstablishmentSerializer
     queryset = Establishment.objects.all()
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class EstablishmentDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Establishment.objects.all()
+    serializer_class = EstablishmentSerializer
+    lookup_field = 'id'
+
+
+class AddressList(generics.ListCreateAPIView):
+
+    serializer_class = AddressSerializer
+    queryset = Address.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class AddressDetail(generics.RetrieveUpdateAPIView):
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    lookup_field = 'id'
 
 
 class HoraryList(APIView):
@@ -151,10 +206,15 @@ class HoraryList(APIView):
         if obj:
             date = datetime.strptime(date, '%Y-%m-%d').date()
 
+            appointment_list = []
+
+            holiday = is_holiday(date)
+
+            if holiday:
+                return JsonResponse(appointment_list, safe=False)
+
             qs = Scheduling.objects.filter(canceled=False, date_time__date=date, provider__username=username, confirmed=True).order_by('date_time__time')  # noqa:E501
             serializer = SchedulingSerializer(qs, many=True)
-
-            appointment_list = []
 
             dt_start = datetime(date.year, date.month, date.day, 9)  # noqa:E501
             dt_end_saturday = datetime(date.year, date.month, date.day, 13)

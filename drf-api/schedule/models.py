@@ -45,3 +45,16 @@ class Employee(models.Model):
 
     def __str__(self):
         return f'{self.provider} -> {self.establishment}'
+
+
+class Address(models.Model):
+    establishment = models.ForeignKey('Establishment', on_delete=models.CASCADE, related_name='address', verbose_name='Estabelecimento')  # noqa:E501
+    cep = models.CharField(max_length=9)
+    state = models.CharField('Estado', max_length=2)
+    city = models.CharField('Cidade', max_length=50)
+    district = models.CharField('Bairro', max_length=50)
+    street = models.CharField('Rua', max_length=50)
+    complement = models.CharField('Complement', max_length=50, blank=True, null=True)  # noqa:E501
+
+    def __str__(self):
+        return f'{self.establishment} -> {self.street}'

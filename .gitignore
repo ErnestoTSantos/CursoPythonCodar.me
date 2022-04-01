@@ -56,6 +56,10 @@ drf-api/db.sqlite3
 drf-api/resume.txt
 drf-api/*.exe
 drf-api/.mypy_cache
+drf-api/.coverage
+drf-api/.coveragerc
+drf-api/.env
+drf-api/app.log
 
 motorcycle-api/venv
 motorcycle-api/db.sqlite3

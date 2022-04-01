@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Employee, Establishment, Faithfulness, Scheduling
+from .models import Address, Employee, Establishment, Faithfulness, Scheduling
 
 
 @admin.register(Scheduling)
@@ -21,3 +21,8 @@ class EmployeeAdmin(admin.ModelAdmin):
 @admin.register(Establishment)
 class EstablishmentAdmin(admin.ModelAdmin):
     list_display = ('name', )
+
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('establishment', 'cep', 'city', 'district', 'street', 'complement')   # noqa:E501
