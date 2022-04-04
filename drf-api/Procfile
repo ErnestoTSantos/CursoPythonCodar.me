@@ -1,2 +1,2 @@
-relese: python manage.py migrate
-web: gunicorn marked.wsgi
+release: python manage.py migrate
+web: gunicorn tamarcado.wsgi
