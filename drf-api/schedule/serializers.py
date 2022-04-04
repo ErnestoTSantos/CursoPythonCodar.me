@@ -7,7 +7,7 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from schedule.models import Address, Employee, Establishment, Scheduling
-from schedule.utils import verify_cep
+from schedule.utils import Verifications
 
 
 class SchedulingSerializer(serializers.ModelSerializer):
@@ -211,7 +211,7 @@ class AddressSerializer(serializers.ModelSerializer):
         if amount_characters != 9:
             raise serializers.ValidationError('O cep precisa ter 9 digitos!')
 
-        validation_cep = verify_cep(value)
+        validation_cep = Verifications.verify_cep(value)
 
         if not validation_cep:
             raise serializers.ValidationError('O cep passado é inválido! Verifique e envie novamente!')   # noqa:E501
@@ -284,7 +284,7 @@ class AddressSerializer(serializers.ModelSerializer):
         district = attrs.get('district', None)
         street = attrs.get('street', None)
 
-        validation_values = verify_cep(cep)
+        validation_values = Verifications.verify_cep(cep)
 
         validation_state = validation_values['state']
         validation_city = validation_values['city']

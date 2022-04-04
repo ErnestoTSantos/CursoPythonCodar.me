@@ -13,7 +13,7 @@ from schedule.serializers import (AddressEstablishmentSerializer,
                                   EmployeeEstablishmentSerializer,
                                   EmployeeSerializer, EstablishmentSerializer,
                                   ProviderSerializer, SchedulingSerializer)
-from schedule.utils import is_holiday
+from schedule.utils import Verifications
 
 
 class IsOwnerOrCreateOnly(permissions.BasePermission):
@@ -48,7 +48,7 @@ class SchedulingList(generics.ListCreateAPIView):  # noqa:E501
         date = datetime.strptime(date[:10], '%Y-%m-%d').date()
         establishment = request.query_params.get('establishment', None)
 
-        holiday = is_holiday(date)
+        holiday = Verifications.is_holiday(date)
 
         if holiday:
             raise serializers.ValidationError('Infelizmente agendamentos não podem ser realizados em feriados!')  # noqa:E501
@@ -208,7 +208,7 @@ class HoraryList(APIView):
 
             appointment_list = []
 
-            holiday = is_holiday(date)
+            holiday = Verifications.is_holiday(date)
 
             if holiday:
                 return JsonResponse(appointment_list, safe=False)
