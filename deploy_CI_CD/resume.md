@@ -27,4 +27,12 @@
         * release: "comando para realizar algo após o deploy" -> python manage.py migrate
         * web: "informa que é uma aplicação web" -> gunicorn marked.wsgi
 
-3. 
+3. Interagindo com nosso app em produção:
+    * Utilizamos heroku logs, para verificar as requests da aplicação em produção.
+    * Precisamos utilizar o comando heroku run bash, para acessarmos outra máquina, para que possamos criar um super usuário.
+    * Podemos ver as variáveis de ambiente configuradas pelo comando env.
+    * Precisamos adicionar nas urls principais as urls do drf, para conseguirmos mexer com as validações na web na aplicação rodando.
+    * Precisamos criar uma view para verificarmos a "saúde" do nosso projeto. Geralmente chamada de helthcheck.
+
+4. Variáveis e ambientes no Postman:
+    * 
