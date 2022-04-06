@@ -29,10 +29,51 @@
 
 3. Interagindo com nosso app em produção:
     * Utilizamos heroku logs, para verificar as requests da aplicação em produção.
-    * Precisamos utilizar o comando heroku run bash, para acessarmos outra máquina, para que possamos criar um super usuário.
+    * Precisamos utilizar o comando heroku run bash, para acessarmos uma máquina virtual, para que possamos criar um super usuário.
     * Podemos ver as variáveis de ambiente configuradas pelo comando env.
     * Precisamos adicionar nas urls principais as urls do drf, para conseguirmos mexer com as validações na web na aplicação rodando.
     * Precisamos criar uma view para verificarmos a "saúde" do nosso projeto. Geralmente chamada de helthcheck.
 
 4. Variáveis e ambientes no Postman:
+    * Podemos ficar trocando os links para fazer as requisições, mas não é a melhor forma.
+    * Podemos ter variáveis no postman.
+    * Precisamos configurar dois ambientes diferentes, para podermos utilizar as variáveis deles nas requests.
+    * Para usarmos as variáveis, na request colocamos o nome da variável em questão.
+    * Precisamos selecionar o ambiente que queremos usar, o "environment".
+    * Para salvarmos as variáveis, precisamos persistir elas.
+    * Podemos definir como padrão a autorização a ser utilizada.
+
+5. Release e Rollback:
+    * Podemos visualizar os releases da nossa aplicação usando o comando "heroku releases".
+    * Rollback é retornar a aplicação para uma versão em que o código estava funcionando.
+    * Para fazer o rollback usamos o comando "heroku rollback v(número da versão)".
+    * Os rollbacks, são uteis para que possamos recuperar possiveis problemas subidos para a produção.
+
+6. Gerando backups do banco de dados:
+    * Ao fazermos um rollback, os dados do db não são retornados.
+    * O heroku nos permite fazer backups, pelo comando "heroku pg:backups:capture --app drf-api-codar".
+    * Podemos verificar as informações do projeto pelo comando "heroku apps:info".
+    * Podemos verificar os backups e restores, pelo comando "heroku pg:backups".
+    * Para restaurarmos as informações dos backups do db, utilizamos o comando "heroku pg:backups:restore".
+    * Podemos agendar a nossa aplicação, para fazer backups diários, para que possamos evitar grandes perdas caso seja necessário fazer um restore.
+    * Para agendarmos esses backups, utilizamos o comando "heroku pg:backups:schedule DATABASE_URL --at '02:00 America/Sao_Paulo' --app drf-api-codar".
+    * Realizar os backups demonstram uma maturidade com os códigos, faz com que sejamos vistos com outros olhos pelos recrutadores.
+
+7. Criando o ambiente de homologação:
+    * É comum as empresas criarem um abiente chamado de staging. Esse ambiente é um intermédio entre o ambiente de desenvolvimento e produção.
+    * É importante que os dados sejam os mais próximos possíveis entre o ambiente de staging e o de produção.
+    * As informações vão primeiro para o ambiente staging, para serem validadas, para depois irem para a produção.
+    * Precisamos criar um outro ambiente, utilizando o comando "heroku create --remote staging".
+    * Ao criarmos esse outro ambiente, o git irá poder fazer push para ambos, tanto o de produção quanto o de staging.
+    * Podemos renomear os remotes pelo comando "git remote rename 'old name' 'new name'"
+    * Precisamos configurar as variáveis de ambiente também.
+    * Nesse caso como temos muitos remotes, precisamos escrever qual o remote que desejamos utilizar para fazer o set das coisas.
+    * Para copiar um banco de dados para outra aplicação, ex a de staging precisamos rodar o comando "heroku pg:backups:restore sushi::b101 DATABASE_URL --app sushi-staging"..
+
+8. Deploy e CI-CD:
+    * CDD = Continuous Deployment/Delivery:
+        * Continuous deployment significa que podemos fazer deploys continuos.
+        * Continuous delivery significa que o processo de entrega da aplicação para outro ambiente também é continuo.
+    * Para ajustarmos precisamos criar um novo repositório no git.
+    * Podemos ajustar no próprio site do heroku, para que o projeto fique linkado para quando realizamos alterações nele já irem para a produção.
     * 
