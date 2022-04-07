@@ -44,6 +44,7 @@
     * Podemos definir como padrão a autorização a ser utilizada.
 
 5. Release e Rollback:
+    * Release é um incremento de versão do software, trazendo atualizações e novas possibilidades.
     * Podemos visualizar os releases da nossa aplicação usando o comando "heroku releases".
     * Rollback é retornar a aplicação para uma versão em que o código estava funcionando.
     * Para fazer o rollback usamos o comando "heroku rollback v(número da versão)".
@@ -76,4 +77,31 @@
         * Continuous delivery significa que o processo de entrega da aplicação para outro ambiente também é continuo.
     * Para ajustarmos precisamos criar um novo repositório no git.
     * Podemos ajustar no próprio site do heroku, para que o projeto fique linkado para quando realizamos alterações nele já irem para a produção.
-    * 
+    * Para que os deploys automáticos aconteçam, precisamos fazer com que o git conect com o heroku.
+
+9. Fluxo de trabalho com Git(Git Workflow):
+    * Como o git poderá nos auxiliar com o desenvolvimento de software.
+    * Feature branching:
+        * Criamos uma ramificação de acordo com a feature que estamos implementando.
+    * É um estilo que facilita a colaboração e ter a noção de qual código está sendo utilizado no momento.
+    * É uma maneira de de manter os códigos do staging mais estáveis.
+
+10. Integração Contínua com GitHub Actions:
+    * Continuous integration: É quando fazemos com que os nossos testes, estilizações de códigos e padrões estejam aplicados.
+    * Podemos ter a criação do arquivo de maneira mais rápida e fácil pelo próprio repositório, na parte de actions.
+    * Podemos verificar possíveis problemas no actions.
+    * O próprio github actions faz a verificação, para saber se o sucesso está igual ou acima do que configuramos no pytest.ini.
+    * Todas as vezes que fizemos o push, esses testes serão realizados.
+    * Podemos ter multiplos checks.
+    * Podemos configurar para que todos os checks tenham a obrigatoriedade de passar
+    * Precisamos ir em settings, branches e add rule.
+    * Podemos criar um status badge, para demonstrar a "qualidade" do nosso código.
+
+11. Revisão:
+    * Deploys automáticos.
+    * Testes automáticos.
+    * Backups e backups agendados, para evitarmos grandes perdas.
+    * Releases/rollbacks.
+    * Software development life cycle(sdlc):
+        * Ambientes de desenvolvimento, staging, produção...
+        * Caminhos para a produção do software.
