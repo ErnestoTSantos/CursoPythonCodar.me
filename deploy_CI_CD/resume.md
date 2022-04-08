@@ -57,7 +57,7 @@
     * Podemos verificar os backups e restores, pelo comando "heroku pg:backups".
     * Para restaurarmos as informações dos backups do db, utilizamos o comando "heroku pg:backups:restore".
     * Podemos agendar a nossa aplicação, para fazer backups diários, para que possamos evitar grandes perdas caso seja necessário fazer um restore.
-    * Para agendarmos esses backups, utilizamos o comando "heroku pg:backups:schedule DATABASE_URL --at '02:00 America/Sao_Paulo' --app drf-api-codar".
+    * Para agendarmos esses backups diários, utilizamos o comando "heroku pg:backups:schedule DATABASE_URL --at '02:00 America/Sao_Paulo' --app drf-api-codar".
     * Realizar os backups demonstram uma maturidade com os códigos, faz com que sejamos vistos com outros olhos pelos recrutadores.
 
 7. Criando o ambiente de homologação:
