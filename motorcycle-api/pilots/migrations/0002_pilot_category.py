@@ -7,15 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('categories', '0001_initial'),
-        ('pilots', '0001_initial'),
+        ("categories", "0001_initial"),
+        ("pilots", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pilot',
-            name='category',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='categories.category'),
+            model_name="pilot",
+            name="category",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to="categories.category",
+            ),
             preserve_default=False,
         ),
     ]

@@ -7,18 +7,36 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, verbose_name='Nome da categoria')),
-                ('pilots_amount', models.IntegerField(verbose_name='Número máximo de pilotos')),
-                ('motorization', models.IntegerField(verbose_name='Potência do motor')),
-                ('last_champion', models.CharField(max_length=50, verbose_name='Nome do último campeão')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=50, verbose_name="Nome da categoria"),
+                ),
+                (
+                    "pilots_amount",
+                    models.IntegerField(verbose_name="Número máximo de pilotos"),
+                ),
+                ("motorization", models.IntegerField(verbose_name="Potência do motor")),
+                (
+                    "last_champion",
+                    models.CharField(
+                        max_length=50, verbose_name="Nome do último campeão"
+                    ),
+                ),
             ],
         ),
     ]
