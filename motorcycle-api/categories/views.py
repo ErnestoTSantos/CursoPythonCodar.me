@@ -17,7 +17,7 @@ class CategoryDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Category.objects.filter(active=True)
-    lookup_field = 'name'
+    lookup_field = "name"
 
     def perform_destroy(self, instance):
         instance.active = False

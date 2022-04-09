@@ -17,7 +17,7 @@ class PilotDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Pilot.objects.filter(retired=False)
     serializer_class = PilotSerializer
-    lookup_field = 'name'
+    lookup_field = "name"
 
     def perform_destroy(self, instance):
         instance.retired = True
