@@ -1,3 +1,2 @@
 release: python manage.py migrate
-worker: celery -A marked -P solo --loglevel=INFO
 web: gunicorn marked.wsgi

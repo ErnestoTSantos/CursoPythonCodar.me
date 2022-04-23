@@ -1,0 +1,31 @@
+version: '3'
+
+services: 
+  app:
+    build:
+      context: . # O docker irá pegar o app da raiz
+    ports: # --publish 8000:8000
+      - 8000:8000
+    volumes:
+      - schedule-db:/app # Persistência do db
+      - ./schedule:/app/schedule # Forma de fazer o auto reaload no docker compose
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    env_file: # Serve para passarmos arquivos de configuração, com variáveis de ambiente
+      - ./.docker.env
+  redis: # Precisamos passar um alias, para que o celery possa se conectar ao redis
+    image: redis:alpine
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - 8025:8025
+  celery:
+    build:
+      context: .
+    command: celery -A marked worker -P solo --loglevel=INFO
+    env_file:
+      - ./.docker.env
+    depends_on:
+      - app
+      - redis
+volumes:
+  schedule-db:
