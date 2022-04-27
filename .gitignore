@@ -1,4 +1,4 @@
-*/.mypy_cache
+.mypy_cache
 __pycache__
 
 Introdução/*
@@ -73,3 +73,5 @@ motorcycle-api/venv
 motorcycle-api/db.sqlite3
 
 deploy_CI_CD/resumo_boas_praticas.md
+
+tasks-api
