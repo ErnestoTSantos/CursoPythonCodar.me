@@ -78,3 +78,4 @@ tasks-api/venv
 tasks-api/.env
 tasks-api/db.sqlite3
 tasks-api/.coverage
+tasks-api/.pytest_cache
