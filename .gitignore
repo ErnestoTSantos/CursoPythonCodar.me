@@ -74,4 +74,7 @@ motorcycle-api/db.sqlite3
 
 deploy_CI_CD/resumo_boas_praticas.md
 
-tasks-api
+tasks-api/venv
+tasks-api/.env
+tasks-api/db.sqlite3
+tasks-api/.coverage
