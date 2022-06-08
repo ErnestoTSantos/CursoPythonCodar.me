@@ -27,7 +27,7 @@ jobs:
     - name: Run Tests
       env:
         DJANGO_SECRET_KEY: ucD14dxvfJrhRUWG9D1NDz8UeXt4dxNlN7A7YgRk16s
-        DJANGO_SETTINGS_MODULE: to_do.settings
+        DJANGO_SETTINGS_MODULE: to_do.settings.dev_test
       run: |
         pytest
     - name: Run black

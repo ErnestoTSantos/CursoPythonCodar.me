@@ -17,13 +17,14 @@ class TestUserView(APITestCase):
         self.client.force_authenticate(clovis)
         request = self.client.get("/api/user/list_users/")
         data = json.loads(request.content)
+        data_list = data[0]
 
-        email = data[0]["email"]
-        first_name = data[0]["first_name"]
-        last_name = data[0]["last_name"]
-        id = data[0]["id"]
-        is_staff = data[0]["is_staff"]
-        username = data[0]["username"]
+        email = data_list["email"]
+        first_name = data_list["first_name"]
+        last_name = data_list["last_name"]
+        id = data_list["id"]
+        is_staff = data_list["is_staff"]
+        username = data_list["username"]
 
         assert email == "clovis@gmail.com"
         assert first_name == ""
@@ -174,3 +175,33 @@ class TestUserView(APITestCase):
 
         assert post.status_code == 400
         assert post.data[0] == "O e-mail enviado já está em uso!"
+
+    def test_retrieve_user(self):
+        user = User.objects.create_user(
+            username="Ernesto",
+            password="12345",
+            email="ernesto@gmail.com",
+            is_staff=False,
+        )
+
+        self.client.force_authenticate(user)
+        request = self.client.get("/api/user/user_details/1/")
+
+        assert request.status_code == 200
+
+    def test_retrieve_not_allowed_user(self):
+        User.objects.create_user(
+            username="Clovis", password="12345", email="clovis@gmail.com", is_staff=True
+        )
+
+        user = User.objects.create_user(
+            username="Ernesto",
+            password="12345",
+            email="ernesto@gmail.com",
+            is_staff=False,
+        )
+
+        self.client.force_authenticate(user)
+        request = self.client.get("/api/user/user_details/1/")
+
+        assert request.data == ["Você não pode acessar esse usuário!"]

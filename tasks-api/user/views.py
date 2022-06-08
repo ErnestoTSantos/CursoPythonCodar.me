@@ -7,34 +7,29 @@ from rest_framework.response import Response
 from user.serializers import UserSerializer
 
 
-class IsOwnerOrCreateOnly(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method == "POST":
-            return True
-
-        if User.objects.filter(username=request.user.username, is_staff=True).exists():
-            return True
-
-        username = request.query_params("username", None)
-        if request.user.username == username:
-            return True
-
-        return False
-
-
 class ListUser(generics.ListAPIView):
 
-    permission_classes = [IsOwnerOrCreateOnly]
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
 
 class DetailUser(generics.RetrieveUpdateAPIView):
 
-    permission_classes = [IsOwnerOrCreateOnly]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = "id"
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        username = request.user.username
+
+        if instance.username == username:
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=200)
+
+        return Response(["Você não pode acessar esse usuário!"])
 
 
 @api_view(http_method_names=["POST"])

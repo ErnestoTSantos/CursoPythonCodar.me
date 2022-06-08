@@ -15,15 +15,46 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Assignment',
+            name="Assignment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('task_name', models.CharField(max_length=100, verbose_name='Nome da tarefa')),
-                ('description', models.TextField(blank=True, verbose_name='Descrição da tarefa')),
-                ('create_day', models.DateField(auto_now_add=True, verbose_name='Dia da criação')),
-                ('final_day', models.DateField(blank=True, verbose_name='Dia da finalização')),
-                ('active', models.BooleanField(default=True, verbose_name='Tarefa ativa')),
-                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='assignment', to=settings.AUTH_USER_MODEL, verbose_name='Criador da tarefa')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "task_name",
+                    models.CharField(max_length=100, verbose_name="Nome da tarefa"),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="Descrição da tarefa"),
+                ),
+                (
+                    "create_day",
+                    models.DateField(auto_now_add=True, verbose_name="Dia da criação"),
+                ),
+                (
+                    "final_day",
+                    models.DateField(blank=True, verbose_name="Dia da finalização"),
+                ),
+                (
+                    "active",
+                    models.BooleanField(default=True, verbose_name="Tarefa ativa"),
+                ),
+                (
+                    "creator",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="assignment",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Criador da tarefa",
+                    ),
+                ),
             ],
         ),
     ]
